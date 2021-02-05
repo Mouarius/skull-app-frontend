@@ -1,11 +1,16 @@
 import Card from './card'
 import { cardType, teamColor } from './common'
+import _ from 'lodash'
 
 class Deck {
   cards = []
   constructor(color) {
     this.color = color
-    this.cards = this.createDeck()
+    if (_.includes(teamColor, color)) {
+      this.cards = this.createDeck(color)
+    } else {
+      this.cards = null
+    }
   }
 
   createDeck() {

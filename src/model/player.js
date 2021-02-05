@@ -1,12 +1,14 @@
 import Deck from './deck'
+import { v4 as uuidv4 } from 'uuid'
 
 class Player {
-  constructor(color, username) {
-    this.color = color
-    this.username = username
-    this.deck = new Deck(color)
+  constructor() {
+    this.color = null
+    this.username = null
+    this.deck = null
     this.hasWonOneRound = false
     this.hasWonTheGame = false
+    this.id = uuidv4()
   }
 
   winTheRound() {

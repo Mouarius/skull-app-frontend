@@ -1,6 +1,17 @@
-div#login-window {
+h1 {
+  margin: 0;
+}
+
+.window {
+  inset: 0;
+  margin: auto;
+  width: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 5em;
+}
+
+.card {
+  border: solid 1px;
+  padding: 1em;
 }
