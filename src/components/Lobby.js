@@ -1,46 +1,111 @@
+import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom'
 import { socket } from '../connection/socket'
+import { teamColor } from '../model/common'
+import Game from '../model/game'
+import { useGame } from '../util/hooks'
 import PlayersList from './PlayersList'
-
-const useGameStatus = () => {
-  const [players, setPlayers] = useState([])
-
-  const addPlayer = (player) => {
-    setPlayers((prev) => prev.concat(player))
-  }
-  const removePlayer = (playerToRemove) => {
-    setPlayers((prev) =>
-      prev.filter((player) => player.id !== playerToRemove.id)
-    )
-  }
-
-  return { players, addPlayer, removePlayer }
-}
+import _ from 'lodash'
 
 const Lobby = ({ player }) => {
+  const history = useHistory()
   let params = useParams()
-  const game = useGameStatus()
+  const game = useGame()
+  const [takenColors, setTakenColors] = useState([])
 
-  // TODO : must update when a use logs into the lobby -> rooms in socket io ?
+  const copyToClipboard = (e) => {
+    e.target.select()
+    document.execCommand('copy')
+  }
+
+  const handleColorChange = (e) => {
+    console.log('Button selected')
+    player.setColor(e.target.value)
+    socket.emit('color_selected', {
+      game: game.state,
+      color: e.target.value,
+      playerID: player.state.id,
+    })
+  }
+  const handleLoginSubmit = (e) => {
+    e.preventDefault()
+  }
 
   useEffect(() => {
-    socket.on('join game', (payload) => {})
-  }, [])
-
-  useEffect(() => {
-    // TODO : Must check if another player already took the same color -> check it in addPlayer() ? Or disable the button ?
-    game.addPlayer(player)
+    setTakenColors(
+      game.state.players.map((p) => {
+        if (p.username !== player.username) {
+          return player.color
+        }
+      })
+    )
   }, [player])
 
+  //* At each render, asks the server if the game trying to be rendered exists
+  useEffect(() => {
+    const fetchGamesList = async () => {
+      try {
+        const response = await axios.get('/api/games/' + params.gameID)
+        game.setGame(response.data.game)
+      } catch (e) {
+        // If it doesnt exist, redirect the user to home
+        history.push('/')
+      }
+    }
+    fetchGamesList()
+  }, [])
+
+  // * Socket listeners
+  useEffect(() => {
+    let mounted = true
+    if (mounted) {
+      socket.on('player_joined', (payload) => {
+        console.log(`A user has logged in : ${payload.player.username}`)
+        game.addPlayer(payload.player)
+      })
+      socket.on('color_selected', (payload) => {
+        console.log(payload)
+        // ! Doesn't work : need to append the selected color element before
+        const newTakenColors = takenColors.map((el) =>
+          el.playerID === payload.playerID
+            ? { ...el, color: payload.color }
+            : el
+        )
+        console.log('newTakenColors :>> ', newTakenColors)
+        setTakenColors(newTakenColors)
+      })
+    }
+    return () => (mounted = false) // Cleanup fix
+  }, [])
+
   return (
-    <div id="login-window">
+    <div id="login-window" className="window">
       <header>
         <h1>Lobby</h1>
-        <div>Game ID : {params.id}</div>
+        <Link to="/">Back to home</Link>
+        <div>
+          Game ID :{' '}
+          <input readOnly onFocus={copyToClipboard} value={game.state.gameID} />
+        </div>
       </header>
-
-      <PlayersList players={game.players} />
+      <ul>
+        {_.map(teamColor, (element) => (
+          <li key={`${element}-key`}>
+            <label htmlFor={`${element}-radio`}>{element}</label>
+            <input
+              type="radio"
+              id={`${element}-radio`}
+              name="color"
+              value={element}
+              checked={element === player.state.color}
+              onChange={handleColorChange}
+              className="color-radio"
+            />
+          </li>
+        ))}
+      </ul>
+      <PlayersList players={game.state.players} />
     </div>
   )
 }

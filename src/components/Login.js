@@ -13,20 +13,25 @@ const Login = ({ player }) => {
     player.setUsername(e.target.value)
   }
 
-  const handleCreateGame = () => {
+  const handleCreateGameButton = () => {
     if (player.state.username !== '') {
-      socket.emit('player login', { player: player.state })
-      socket.emit('create game', { player: player.state })
+      // if user has defined his username
+      // First, create a new game request to the server, to create a room in socket.io
+      // Then get this room id, and make the player to join it
+      socket.emit('create_game/request', { player: player.state })
+      // We must wait for the response to redirect the player to the new game and new room
     }
+    //TODO : Display notification to ask the user to give a username
   }
 
-  const createNewGame = (payload) => {
-    history.push('/game/' + payload.gameID)
-  }
-
-  const handleJoinGame = () => {
-    socket.emit('player login', { player: player.state })
-    socket.emit('join game', { gameID: inputGameID })
+  const handleJoinGameButton = () => {
+    if (inputGameID) {
+      socket.emit('login_player/request', { player: player.state })
+      socket.emit('join_game/request', {
+        player: player.state,
+        gameID: inputGameID,
+      })
+    }
   }
 
   const joinGame = (payload) => {
@@ -36,17 +41,9 @@ const Login = ({ player }) => {
   }
 
   useEffect(() => {
-    socket.on('create game status', createNewGame)
-    socket.on('join game status', joinGame)
+    socket.on('create_game/status', joinGame)
+    socket.on('join_game/status', joinGame)
   }, [])
-
-  // const handleColorChange = (e) => {
-  //   console.log('e.target.value :>> ', e.target.value)
-  //   player.setColor(e.target.value)
-  // }
-  // const handleLoginSubmit = (e) => {
-  //   e.preventDefault()
-  // }
 
   return (
     <div className="window">
@@ -62,32 +59,15 @@ const Login = ({ player }) => {
           />
         </div>
         <div>
-          <button onClick={handleCreateGame}>create a game</button>
+          <button onClick={handleCreateGameButton}>create a game</button>
         </div>
         <div>
           <input
             value={inputGameID}
             onChange={(e) => setInputGameID(e.target.value)}
           />
-          <button onClick={handleJoinGame}>join a game</button>
+          <button onClick={handleJoinGameButton}>join a game</button>
         </div>
-
-        {/* <ul>
-          {_.map(teamColor, (element) => (
-            <li key={`${element}-key`}>
-              <label htmlFor={`${element}-radio`}>{element}</label>
-              <input
-                type="radio"
-                id={`${element}-radio`}
-                name="color"
-                value={element}
-                checked={element === player.state.color}
-                onChange={handleColorChange}
-                className="color-radio"
-              />
-            </li>
-          ))}
-        </ul> */}
       </div>
     </div>
   )

@@ -9,6 +9,8 @@ import Home from './components/Home'
 import Lobby from './components/Lobby'
 import Login from './components/Login'
 import { usePlayer } from './util/hooks'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 function App() {
   const player = usePlayer()
@@ -16,15 +18,14 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/game/:id">
-          {/* {!player.username ? <Redirect to="/login" /> : <Home />} */}
+        <Route path="/game/:gameID">
           <Lobby player={player} />
         </Route>
         <Route path="/login">
-          <Login createPlayer={() => null} player={player} />
+          <Login player={player} />
         </Route>
         <Route path="/">
-          {!player.username ? <Redirect to="/login" /> : <Home />}
+          {!player.state.username ? <Redirect to="/login" /> : <Home />}
         </Route>
       </Switch>
     </Router>

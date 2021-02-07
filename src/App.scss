@@ -1,5 +1,13 @@
-h1 {
+h1,
+h2,
+h3 {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 400;
   margin: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
 }
 
 .window {

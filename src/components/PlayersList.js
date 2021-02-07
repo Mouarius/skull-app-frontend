@@ -1,8 +1,6 @@
 import React from 'react'
 
 const PlayersList = ({ players }) => {
-  console.log('players :>> ', players)
-  console.log('players :>> ', typeof players)
   if (!players) {
     return null
   }
