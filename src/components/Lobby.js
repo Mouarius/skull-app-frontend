@@ -7,8 +7,13 @@ import Game from '../model/game'
 import { useGame } from '../util/hooks'
 import PlayersList from './PlayersList'
 import _ from 'lodash'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectPlayer, setColor } from '../features/player/playerSlice'
 
-const Lobby = ({ player }) => {
+const Lobby = () => {
+  const dispatch = useDispatch()
+  const player = useSelector(selectPlayer)
+
   const history = useHistory()
   let params = useParams()
   const game = useGame()
@@ -21,11 +26,11 @@ const Lobby = ({ player }) => {
 
   const handleColorChange = (e) => {
     console.log('Button selected')
-    player.setColor(e.target.value)
+    dispatch(setColor(e.target.value))
     socket.emit('color_selected', {
       game: game.state,
       color: e.target.value,
-      playerID: player.state.id,
+      playerID: player.id,
     })
   }
   const handleLoginSubmit = (e) => {
@@ -98,7 +103,7 @@ const Lobby = ({ player }) => {
               id={`${element}-radio`}
               name="color"
               value={element}
-              checked={element === player.state.color}
+              checked={element === player.color}
               onChange={handleColorChange}
               className="color-radio"
             />

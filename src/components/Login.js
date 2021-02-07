@@ -4,21 +4,25 @@ import _ from 'lodash'
 import { useHistory } from 'react-router'
 import Player from '../model/player'
 import { socket } from '../connection/socket'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectPlayer, setUsername } from '../features/player/playerSlice'
 
-const Login = ({ player }) => {
+const Login = () => {
   const history = useHistory()
+  const dispatch = useDispatch()
+  const player = useSelector(selectPlayer)
   const [inputGameID, setInputGameID] = useState('')
 
   const handleUsernameChange = (e) => {
-    player.setUsername(e.target.value)
+    dispatch(setUsername(e.target.value))
   }
 
   const handleCreateGameButton = () => {
-    if (player.state.username !== '') {
+    if (player.username !== '') {
       // if user has defined his username
       // First, create a new game request to the server, to create a room in socket.io
       // Then get this room id, and make the player to join it
-      socket.emit('create_game/request', { player: player.state })
+      socket.emit('create_game/request', { player: player })
       // We must wait for the response to redirect the player to the new game and new room
     }
     //TODO : Display notification to ask the user to give a username
@@ -26,9 +30,9 @@ const Login = ({ player }) => {
 
   const handleJoinGameButton = () => {
     if (inputGameID) {
-      socket.emit('login_player/request', { player: player.state })
+      socket.emit('login_player/request', { player: player })
       socket.emit('join_game/request', {
-        player: player.state,
+        player: player,
         gameID: inputGameID,
       })
     }
