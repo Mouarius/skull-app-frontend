@@ -6,6 +6,7 @@ import Player from '../model/player'
 import { socket } from '../connection/socket'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectPlayer, setUsername } from '../features/player/playerSlice'
+import Button from './button/Button'
 
 const Login = () => {
   const history = useHistory()
@@ -63,14 +64,14 @@ const Login = () => {
           />
         </div>
         <div>
-          <button onClick={handleCreateGameButton}>create a game</button>
+          <Button onClick={handleCreateGameButton}>create a game</Button>
         </div>
         <div>
           <input
             value={inputGameID}
             onChange={(e) => setInputGameID(e.target.value)}
           />
-          <button onClick={handleJoinGameButton}>join a game</button>
+          <Button onClick={handleJoinGameButton}>join a game</Button>
         </div>
       </div>
     </div>

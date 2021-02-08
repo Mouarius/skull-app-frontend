@@ -14,13 +14,10 @@ const initialState = {
 
 export const setPlayerColorAndUpdate = (color) => (dispatch, getState) => {
   const initialState = getState()
-  console.log('initialState :>> ', initialState)
   dispatch(setColor(color))
   const updatedState = getState()
-  console.log('updatedState :>> ', updatedState)
   dispatch(updatePlayer(updatedState.player))
   const finalState = getState()
-  console.log('finalState :>> ', finalState)
   socket.emit('update_game', {
     game: finalState.game,
   })

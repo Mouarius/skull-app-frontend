@@ -2,22 +2,13 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { socket } from '../connection/socket'
-import { teamColor } from '../model/common'
 import PlayersList from './PlayersList'
 import _ from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  selectPlayer,
-  setColor,
-  setPlayer,
-  setPlayerColorAndUpdate,
-} from '../features/player/playerSlice'
-import {
-  addPlayer,
-  selectGame,
-  setGame,
-  updatePlayer,
-} from '../features/game/gameSlice'
+import { selectPlayer } from '../features/player/playerSlice'
+import { addPlayer, selectGame, setGame } from '../features/game/gameSlice'
+import Button from './button/Button'
+import ButtonColorList from './button/ButtonColorList'
 
 const Lobby = () => {
   const dispatch = useDispatch()
@@ -33,12 +24,14 @@ const Lobby = () => {
     document.execCommand('copy')
   }
 
-  const handleColorChange = (e) => {
-    // TODO : update the state of the app on the server
-    dispatch(setPlayerColorAndUpdate(e.target.value))
-  }
   const handleLoginSubmit = (e) => {
     e.preventDefault()
+  }
+  const startOrReadyButton = () => {
+    if (player.id === game.ownerID) {
+      return <Button>Start</Button>
+    }
+    return <Button>Ready</Button>
   }
 
   useEffect(() => {
@@ -69,22 +62,6 @@ const Lobby = () => {
         console.log(`A user has logged in : ${payload.player.username}`)
         dispatch(addPlayer(payload.player))
       })
-      // socket.on('color_selected', (payload) => {
-      //   dispatch(updatePlayer(payload.player))
-      //   // ! Doesn't work : need to append the selected color element before
-      //   const takenColorsList = game.players.map((player) => ({
-      //     playerID: player.id,
-      //     color: player.color,
-      //   }))
-      //   console.log('takenColorsList :>> ', takenColorsList)
-      //   const newTakenColors = takenColors.map((el) =>
-      //     el.playerID === payload.playerID
-      //       ? { ...el, color: payload.color }
-      //       : el
-      //   )
-      //   console.log('newTakenColors :>> ', newTakenColors)
-      //   setTakenColors(newTakenColors)
-      // })
       socket.on('game_updated', (payload) => {
         dispatch(setGame(payload.game))
       })
@@ -94,39 +71,19 @@ const Lobby = () => {
 
   return (
     <div id="login-window" className="window">
-      <header>
-        <h1>Lobby</h1>
-        <Link to="/">Back to home</Link>
-        <div>
-          Game ID :{' '}
-          <input readOnly onFocus={copyToClipboard} value={game.gameID} />
-        </div>
-      </header>
-      <ul>
-        {_.map(teamColor, (element) => (
-          <li
-            key={`${element}-key`}
-            className={
-              takenColors.find((color) => color === element) ? 'taken' : ''
-            }
-          >
-            <label htmlFor={`${element}-radio`}>{element}</label>
-            <input
-              type="radio"
-              id={`${element}-radio`}
-              name="color"
-              value={element}
-              checked={element === player.color}
-              disabled={
-                takenColors.find((color) => color === element) ? true : false
-              }
-              onChange={handleColorChange}
-              className={`color-radio`}
-            />
-          </li>
-        ))}
-      </ul>
-      <PlayersList players={game.players} />
+      <div className="card">
+        <header>
+          <h1>Lobby</h1>
+          <Link to="/">Back to home</Link>
+          <div>
+            Game ID :{' '}
+            <input readOnly onFocus={copyToClipboard} value={game.gameID} />
+          </div>
+        </header>
+        <ButtonColorList takenColors={takenColors} />
+        <div className="game-controls">{startOrReadyButton()}</div>
+        <PlayersList players={game.players} />
+      </div>
     </div>
   )
 }

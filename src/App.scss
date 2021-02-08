@@ -1,3 +1,27 @@
+@import './util/variables.scss';
+
+.bg-red {
+  background-color: $red;
+}
+.bg-orange {
+  background-color: $orange;
+}
+.bg-yellow {
+  background-color: $yellow;
+}
+.bg-green {
+  background-color: $green;
+}
+.bg-blue {
+  background-color: $blue;
+}
+.bg-purple {
+  background-color: $purple;
+}
+.bg-black {
+  background-color: $black;
+}
+
 h1,
 h2,
 h3 {
@@ -21,9 +45,13 @@ body {
 
 .card {
   border: solid 1px;
+  border-radius: 1em;
   padding: 1em;
 }
 
-.taken {
-  background-color: gray;
+.shadow {
+  filter: drop-shadow(-4px 4px 4px rgba(0, 0, 0, 0.25));
+}
+.shadow-sm {
+  filter: drop-shadow(-2px 2px 1px rgba(0, 0, 0, 0.25));
 }
