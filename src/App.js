@@ -11,21 +11,28 @@ import Login from './components/Login'
 import { usePlayer } from './util/hooks'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
+import { selectPlayer } from './features/player/playerSlice'
 
 function App() {
-  const player = usePlayer()
+  const player = useSelector(selectPlayer)
+
+  const displayLobby = () => {
+    if (!player.username) {
+      return <Redirect to="/login" />
+    }
+    return <Lobby />
+  }
 
   return (
     <Router>
       <Switch>
-        <Route path="/game/:gameID">
-          <Lobby player={player} />
-        </Route>
+        <Route path="/game/:gameID">{displayLobby()}</Route>
         <Route path="/login">
-          <Login player={player} />
+          <Login />
         </Route>
         <Route path="/">
-          {!player.state.username ? <Redirect to="/login" /> : <Home />}
+          <Redirect to="/login" />
         </Route>
       </Switch>
     </Router>

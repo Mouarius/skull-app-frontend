@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import Deck from '../../model/deck'
 import { v4 as uuidv4 } from 'uuid'
+import { socket } from '../../connection/socket'
+import { updatePlayer } from '../game/gameSlice'
 
 const initialState = {
   username: '',
@@ -8,6 +10,20 @@ const initialState = {
   hasWonOneRound: false,
   hasWonTheGame: false,
   id: uuidv4(),
+}
+
+export const setPlayerColorAndUpdate = (color) => (dispatch, getState) => {
+  const initialState = getState()
+  console.log('initialState :>> ', initialState)
+  dispatch(setColor(color))
+  const updatedState = getState()
+  console.log('updatedState :>> ', updatedState)
+  dispatch(updatePlayer(updatedState.player))
+  const finalState = getState()
+  console.log('finalState :>> ', finalState)
+  socket.emit('update_game', {
+    game: finalState.game,
+  })
 }
 
 const playerSlice = createSlice({

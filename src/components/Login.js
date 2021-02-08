@@ -38,6 +38,7 @@ const Login = () => {
   }
 
   const joinGame = (payload) => {
+    // window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player))
     if (payload.game) {
       history.push('/game/' + payload.game.gameID)
     }

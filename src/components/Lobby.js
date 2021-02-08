@@ -6,7 +6,12 @@ import { teamColor } from '../model/common'
 import PlayersList from './PlayersList'
 import _ from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectPlayer, setColor } from '../features/player/playerSlice'
+import {
+  selectPlayer,
+  setColor,
+  setPlayer,
+  setPlayerColorAndUpdate,
+} from '../features/player/playerSlice'
 import {
   addPlayer,
   selectGame,
@@ -29,24 +34,18 @@ const Lobby = () => {
   }
 
   const handleColorChange = (e) => {
-    dispatch(setColor(e.target.value))
     // TODO : update the state of the app on the server
-    socket.emit('color_selected', {
-      game: game,
-      color: e.target.value,
-      player: player,
-    })
+    dispatch(setPlayerColorAndUpdate(e.target.value))
   }
   const handleLoginSubmit = (e) => {
     e.preventDefault()
   }
 
   useEffect(() => {
-    // TODO : get the colors of the other players
-    if (player.username && game.gameID) {
-      dispatch(updatePlayer(player))
+    if (game.players) {
+      setTakenColors(game.players.map((player) => player.color))
     }
-  }, [player])
+  }, [game])
 
   //* At each render, asks the server if the game trying to be rendered exists
   useEffect(() => {
@@ -70,22 +69,24 @@ const Lobby = () => {
         console.log(`A user has logged in : ${payload.player.username}`)
         dispatch(addPlayer(payload.player))
       })
-      socket.on('color_selected', (payload) => {
-        console.log(payload)
-        dispatch(updatePlayer(payload.player))
-        // ! Doesn't work : need to append the selected color element before
-        const takenColorsList = game.players.map((player) => ({
-          playerID: player.id,
-          color: player.color,
-        }))
-        console.log('takenColorsList :>> ', takenColorsList)
-        const newTakenColors = takenColors.map((el) =>
-          el.playerID === payload.playerID
-            ? { ...el, color: payload.color }
-            : el
-        )
-        console.log('newTakenColors :>> ', newTakenColors)
-        setTakenColors(newTakenColors)
+      // socket.on('color_selected', (payload) => {
+      //   dispatch(updatePlayer(payload.player))
+      //   // ! Doesn't work : need to append the selected color element before
+      //   const takenColorsList = game.players.map((player) => ({
+      //     playerID: player.id,
+      //     color: player.color,
+      //   }))
+      //   console.log('takenColorsList :>> ', takenColorsList)
+      //   const newTakenColors = takenColors.map((el) =>
+      //     el.playerID === payload.playerID
+      //       ? { ...el, color: payload.color }
+      //       : el
+      //   )
+      //   console.log('newTakenColors :>> ', newTakenColors)
+      //   setTakenColors(newTakenColors)
+      // })
+      socket.on('game_updated', (payload) => {
+        dispatch(setGame(payload.game))
       })
     }
     return () => (mounted = false) // Cleanup fix
@@ -103,7 +104,12 @@ const Lobby = () => {
       </header>
       <ul>
         {_.map(teamColor, (element) => (
-          <li key={`${element}-key`}>
+          <li
+            key={`${element}-key`}
+            className={
+              takenColors.find((color) => color === element) ? 'taken' : ''
+            }
+          >
             <label htmlFor={`${element}-radio`}>{element}</label>
             <input
               type="radio"
@@ -111,8 +117,11 @@ const Lobby = () => {
               name="color"
               value={element}
               checked={element === player.color}
+              disabled={
+                takenColors.find((color) => color === element) ? true : false
+              }
               onChange={handleColorChange}
-              className="color-radio"
+              className={`color-radio`}
             />
           </li>
         ))}

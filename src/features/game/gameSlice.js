@@ -13,12 +13,10 @@ const gameSlice = createSlice({
       state.players.filter((player) => player.id !== action.payload.id)
     },
     updatePlayer: (state, action) => {
-      let playerToUpdate = state.players.find(
-        (player) => player.id === action.payload.id
+      const newPlayers = state.players.map((player) =>
+        player.id === action.payload.id ? action.payload : player
       )
-      if (playerToUpdate) {
-        playerToUpdate = action.payload
-      }
+      state.players = newPlayers
     },
 
     setGame: (state, action) => {
