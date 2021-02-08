@@ -71,10 +71,10 @@ const Lobby = () => {
 
   return (
     <div id="login-window" className="window">
-      <div className="card">
-        <header>
-          <h1>Lobby</h1>
+      <div className="shadow card">
+        <header className="card-header">
           <Link to="/">Back to home</Link>
+          <h1>Lobby</h1>
           <div>
             Game ID :{' '}
             <input readOnly onFocus={copyToClipboard} value={game.gameID} />

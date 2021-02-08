@@ -9,7 +9,7 @@
   }
   .radio-mark {
     box-sizing: border-box;
-    display: inline-block;
+    display: flex;
     height: 2.3em;
     width: 2.3em;
     margin-left: 0.2em;
@@ -22,10 +22,15 @@
     border: solid #f0f0f0 0.6em;
     transition: border 0.2s ease;
   }
-  // .selection-circle {
-  //   padding: 0.3em;
-  //   margin-left: 0.2em;
-  //   margin-right: 0.2em;
-  //   border-radius: 100%;
-  // }
+  .radio-mark.checked {
+    border: solid #f0f0f0 0.6em;
+    transition: border 0.2s ease;
+  }
+  .radio-mark.taken {
+    opacity: 0.2;
+  }
+  .radio-mark.taken:hover {
+    border: solid #f0f0f0 0;
+    cursor: not-allowed;
+  }
 }

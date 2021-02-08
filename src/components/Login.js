@@ -52,8 +52,10 @@ const Login = () => {
 
   return (
     <div className="window">
-      <div className="card">
-        <h1>Login</h1>
+      <div className="card shadow">
+        <header className="card-header">
+          <h1>Login</h1>
+        </header>
         <div>
           <label htmlFor="username">username :</label>
           <input

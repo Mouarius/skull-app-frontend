@@ -16,6 +16,21 @@ const ButtonColor = (props) => {
     dispatch(setPlayerColorAndUpdate(e.target.value))
   }
 
+  const isChecked = () => {
+    if (props.color === player.color) {
+      return 'checked'
+    }
+  }
+
+  const isTaken = () => {
+    const colorIsTaken = props.takenColors.find(
+      (color) => color === props.color
+    )
+    if (!!colorIsTaken && colorIsTaken !== player.color) {
+      return 'taken'
+    }
+  }
+
   const findPlayerRelatedToColor = (color) => {
     const player = game.players.find((player) => player.color === color)
     if (player) {
@@ -30,9 +45,9 @@ const ButtonColor = (props) => {
         {/* <span className="taken-by-label">
           taken by : {findPlayerRelatedToColor(props.color)}
         </span> */}
-        <span className={`selection-circle`}>
-          <span className={`radio-mark bg-${props.color}`}></span>
-        </span>
+        <span
+          className={`radio-mark bg-${props.color} ${isChecked()} ${isTaken()}`}
+        ></span>
         <input
           type="radio"
           id={`${props.color}-radio`}

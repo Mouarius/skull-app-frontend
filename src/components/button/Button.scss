@@ -1,8 +1,19 @@
-@import '../../App.scss';
+@import '../../util/variables';
 
 .Button {
   border-radius: 0.8em;
+  box-sizing: border-box;
   background-color: $purple;
-  padding: 0.8em;
-  border: none;
+  padding: 0.5em;
+  border: solid $purple $border-md;
+  color: white;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-family: 'Roboto Mono', monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.Button:hover {
+  background-color: white;
+  color: $purple;
 }
