@@ -1,8 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 import Deck from '../../model/deck'
-import Player from '../../model/player'
+import { v4 as uuidv4 } from 'uuid'
 
-const initialState = new Player()
+const initialState = {
+  username: '',
+  deck: [],
+  hasWonOneRound: false,
+  hasWonTheGame: false,
+  id: uuidv4(),
+}
 
 const playerSlice = createSlice({
   name: 'player',
@@ -18,7 +24,7 @@ const playerSlice = createSlice({
       return { ...state, username: action.payload }
     },
     setColor: (state, action) => {
-      state.color = action.payload
+      return { ...state, color: action.payload }
     },
     win: (state, action) => {
       if (state.hasWonOneRound) {

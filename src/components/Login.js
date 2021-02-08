@@ -30,7 +30,6 @@ const Login = () => {
 
   const handleJoinGameButton = () => {
     if (inputGameID) {
-      socket.emit('login_player/request', { player: player })
       socket.emit('join_game/request', {
         player: player,
         gameID: inputGameID,
@@ -39,7 +38,7 @@ const Login = () => {
   }
 
   const joinGame = (payload) => {
-    if (payload.status) {
+    if (payload.game) {
       history.push('/game/' + payload.game.gameID)
     }
   }

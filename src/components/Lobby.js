@@ -1,22 +1,26 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { Link, useHistory, useLocation, useParams } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import { socket } from '../connection/socket'
 import { teamColor } from '../model/common'
-import Game from '../model/game'
-import { useGame } from '../util/hooks'
 import PlayersList from './PlayersList'
 import _ from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectPlayer, setColor } from '../features/player/playerSlice'
+import {
+  addPlayer,
+  selectGame,
+  setGame,
+  updatePlayer,
+} from '../features/game/gameSlice'
 
 const Lobby = () => {
   const dispatch = useDispatch()
   const player = useSelector(selectPlayer)
+  const game = useSelector(selectGame)
 
   const history = useHistory()
   let params = useParams()
-  const game = useGame()
   const [takenColors, setTakenColors] = useState([])
 
   const copyToClipboard = (e) => {
@@ -25,12 +29,12 @@ const Lobby = () => {
   }
 
   const handleColorChange = (e) => {
-    console.log('Button selected')
     dispatch(setColor(e.target.value))
+    // TODO : update the state of the app on the server
     socket.emit('color_selected', {
-      game: game.state,
+      game: game,
       color: e.target.value,
-      playerID: player.id,
+      player: player,
     })
   }
   const handleLoginSubmit = (e) => {
@@ -38,13 +42,10 @@ const Lobby = () => {
   }
 
   useEffect(() => {
-    setTakenColors(
-      game.state.players.map((p) => {
-        if (p.username !== player.username) {
-          return player.color
-        }
-      })
-    )
+    // TODO : get the colors of the other players
+    if (player.username && game.gameID) {
+      dispatch(updatePlayer(player))
+    }
   }, [player])
 
   //* At each render, asks the server if the game trying to be rendered exists
@@ -52,7 +53,7 @@ const Lobby = () => {
     const fetchGamesList = async () => {
       try {
         const response = await axios.get('/api/games/' + params.gameID)
-        game.setGame(response.data.game)
+        dispatch(setGame(response.data))
       } catch (e) {
         // If it doesnt exist, redirect the user to home
         history.push('/')
@@ -67,11 +68,17 @@ const Lobby = () => {
     if (mounted) {
       socket.on('player_joined', (payload) => {
         console.log(`A user has logged in : ${payload.player.username}`)
-        game.addPlayer(payload.player)
+        dispatch(addPlayer(payload.player))
       })
       socket.on('color_selected', (payload) => {
         console.log(payload)
+        dispatch(updatePlayer(payload.player))
         // ! Doesn't work : need to append the selected color element before
+        const takenColorsList = game.players.map((player) => ({
+          playerID: player.id,
+          color: player.color,
+        }))
+        console.log('takenColorsList :>> ', takenColorsList)
         const newTakenColors = takenColors.map((el) =>
           el.playerID === payload.playerID
             ? { ...el, color: payload.color }
@@ -91,7 +98,7 @@ const Lobby = () => {
         <Link to="/">Back to home</Link>
         <div>
           Game ID :{' '}
-          <input readOnly onFocus={copyToClipboard} value={game.state.gameID} />
+          <input readOnly onFocus={copyToClipboard} value={game.gameID} />
         </div>
       </header>
       <ul>
@@ -110,7 +117,7 @@ const Lobby = () => {
           </li>
         ))}
       </ul>
-      <PlayersList players={game.state.players} />
+      <PlayersList players={game.players} />
     </div>
   )
 }
