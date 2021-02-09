@@ -11,6 +11,7 @@
     "@testing-library/user-event": "^12.6.3",
     "autoprefixer": "^9.8.6",
     "axios": "^0.21.1",
+    "daisyui": "^0.11.3",
     "lodash": "^4.17.20",
     "node-sass": "^5.0.0",
     "postcss": "^7.0.35",

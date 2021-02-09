@@ -70,19 +70,21 @@ const Lobby = () => {
   }, [])
 
   return (
-    <div id="login-window" className="window">
+    <div id="login-window">
       <div className="shadow card">
-        <header className="card-header">
-          <Link to="/">Back to home</Link>
-          <h1>Lobby</h1>
-          <div>
-            Game ID :{' '}
-            <input readOnly onFocus={copyToClipboard} value={game.gameID} />
-          </div>
-        </header>
-        <ButtonColorList takenColors={takenColors} />
-        <div className="game-controls">{startOrReadyButton()}</div>
-        <PlayersList players={game.players} />
+        <div className="card-body">
+          <header className="card-header">
+            <Link to="/">Back to home</Link>
+            <h1 className="card-title">Lobby</h1>
+            <div>
+              Game ID :{' '}
+              <input readOnly onFocus={copyToClipboard} value={game.gameID} />
+            </div>
+          </header>
+          <ButtonColorList takenColors={takenColors} />
+          <div className="game-controls">{startOrReadyButton()}</div>
+          <PlayersList players={game.players} />
+        </div>
       </div>
     </div>
   )

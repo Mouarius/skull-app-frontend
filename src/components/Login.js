@@ -51,29 +51,41 @@ const Login = () => {
   }, [])
 
   return (
-    <div className="window">
-      <div className="card shadow">
-        <header className="card-header">
-          <h1>Login</h1>
-        </header>
-        <div>
-          <label htmlFor="username">username :</label>
-          <input
-            type="text"
-            id="username"
-            value={player.username}
-            onChange={handleUsernameChange}
-          />
-        </div>
-        <div>
-          <Button onClick={handleCreateGameButton}>create a game</Button>
-        </div>
-        <div>
-          <input
-            value={inputGameID}
-            onChange={(e) => setInputGameID(e.target.value)}
-          />
-          <Button onClick={handleJoinGameButton}>join a game</Button>
+    <div className="flex">
+      <div className="m-auto shadow card w-96">
+        <div className="card-body">
+          <header className="card-header">
+            <h1 className="font-mono text-3xl card-title">Login</h1>
+          </header>
+          <div className="form-control">
+            <label className="label" htmlFor="username">
+              <span className="label-text">Username</span>
+            </label>
+            <input
+              type="text"
+              id="username"
+              placeholder="username"
+              value={player.username}
+              onChange={handleUsernameChange}
+              className="input input-sm input-bordered"
+            />
+          </div>
+          <div className="flex flex-col mt-4">
+            <Button onClick={handleCreateGameButton}>create a game</Button>
+            <span className="text-center">or</span>
+            <div className="flex flex-col p-2 bg-purple-500 rounded-lg">
+              <label className="label" htmlFor="username">
+                <span className="text-white label-text">Game ID</span>
+              </label>
+              <input
+                value={inputGameID}
+                onChange={(e) => setInputGameID(e.target.value)}
+                className="mb-2 input input-sm input-bordered"
+                placeholder="game ID"
+              />
+              <Button onClick={handleJoinGameButton}>join a game</Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
