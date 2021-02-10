@@ -1,10 +1,11 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectGame } from '../../features/game/gameSlice'
+import { selectGame } from '../../../features/game/gameSlice'
 import {
   selectPlayer,
   setPlayerColorAndUpdate,
-} from '../../features/player/playerSlice'
+} from '../../../features/player/playerSlice'
+
 import './ButtonColor.scss'
 
 const ButtonColor = (props) => {

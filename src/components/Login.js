@@ -6,7 +6,10 @@ import Player from '../model/player'
 import { socket } from '../connection/socket'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectPlayer, setUsername } from '../features/player/playerSlice'
-import Button from './button/Button'
+import Button from './UI/Button/Button'
+import InputText from './UI/Input/InputText'
+import Card from './UI/Card/Card'
+import Notification from './Notification/Notification'
 
 const Login = () => {
   const history = useHistory()
@@ -51,43 +54,35 @@ const Login = () => {
   }, [])
 
   return (
-    <div className="flex">
-      <div className="m-auto shadow card w-96">
-        <div className="card-body">
-          <header className="card-header">
-            <h1 className="font-mono text-3xl card-title">Login</h1>
-          </header>
-          <div className="form-control">
-            <label className="label" htmlFor="username">
-              <span className="label-text">Username</span>
-            </label>
-            <input
-              type="text"
-              id="username"
-              placeholder="username"
-              value={player.username}
-              onChange={handleUsernameChange}
-              className="input input-sm input-bordered"
+    <div className="flex flex-col items-center pt-8">
+      <Card>
+        <header className="card-header">
+          <h1 className=" card-title">Login</h1>
+        </header>
+        <div className="form-control">
+          <InputText
+            label="Username"
+            id="username"
+            placeholder="username"
+            value={player.username}
+            onChange={handleUsernameChange}
+          />
+        </div>
+        <Notification type="info" message="An info message" />
+        <div className="flex flex-col mt-8">
+          <Button onClick={handleCreateGameButton}>create a game</Button>
+          <div className="flex flex-col p-2 mt-4 space-y-4 border-2 rounded-lg border-purple">
+            <InputText
+              label="Game ID"
+              id="game-id-input"
+              placeholder="game_id"
+              value={inputGameID}
+              onChange={(e) => setInputGameID(e.target.value)}
             />
-          </div>
-          <div className="flex flex-col mt-4">
-            <Button onClick={handleCreateGameButton}>create a game</Button>
-            <span className="text-center">or</span>
-            <div className="flex flex-col p-2 bg-purple-500 rounded-lg">
-              <label className="label" htmlFor="username">
-                <span className="text-white label-text">Game ID</span>
-              </label>
-              <input
-                value={inputGameID}
-                onChange={(e) => setInputGameID(e.target.value)}
-                className="mb-2 input input-sm input-bordered"
-                placeholder="game ID"
-              />
-              <Button onClick={handleJoinGameButton}>join a game</Button>
-            </div>
+            <Button onClick={handleJoinGameButton}>join</Button>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   )
 }

@@ -32,3 +32,7 @@
   --wa: 36 100% 50%;
   --er: 14 100% 57%;
 }
+
+.card-title {
+  @apply font-mono text-3xl;
+}

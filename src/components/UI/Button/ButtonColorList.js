@@ -1,12 +1,11 @@
 import React from 'react'
-import { teamColor } from '../../model/common'
 import ButtonColor from './ButtonColor'
-import './ButtonColorList.scss'
 import _ from 'lodash'
+import { teamColor } from '../../../model/common'
 
 const ButtonColorList = (props) => {
   return (
-    <ul className="ButtonColorList">
+    <ul className="flex flex-row m-auto mb-8">
       {_.map(teamColor, (color) => (
         <ButtonColor
           key={`${color}-key`}
