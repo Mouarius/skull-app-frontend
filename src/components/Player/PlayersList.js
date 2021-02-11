@@ -5,10 +5,13 @@ const PlayersList = ({ players }) => {
     return null
   }
   return (
-    <div id="players-list-window">
-      <ul>
+    <div className="mb-8">
+      <h2>Players</h2>
+      <ul className="flex flex-row flex-wrap">
         {players.map((player) => (
-          <li key={player.id}>{player.username}</li>
+          <li className="px-2 font-light text-md" key={player.id}>
+            {player.username}
+          </li>
         ))}
       </ul>
     </div>

@@ -4,7 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* :root {
   --d: 0 0% 100%;
   --p1: 258 80% 70%;
   --p2: 258 89% 66%;
@@ -31,8 +31,22 @@
   --su: 174 100% 29%;
   --wa: 36 100% 50%;
   --er: 14 100% 57%;
+} */
+
+@layer base {
+  body {
+    @apply font-sans bg-app-dots;
+  }
+  h1 {
+    @apply text-3xl font-display;
+  }
+  h2 {
+    @apply text-xl font-semibold font-display;
+  }
 }
 
-.card-title {
-  @apply font-mono text-3xl;
+@layer utilities {
+  .animation-delay-1500 {
+    animation-delay: 1.5s;
+  }
 }
