@@ -50,3 +50,49 @@
     animation-delay: 1.5s;
   }
 }
+
+.slide-lobby-enter {
+  opacity: 0;
+  transform: scale(0.9);
+  transform: translateX(500px);
+}
+.slide-lobby-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transform: translate(0);
+  transition: all 500ms ease-in;
+}
+.slide-lobby-exit {
+  opacity: 1;
+  transform: scale(1);
+  transform: translate(0);
+}
+.slide-lobby-exit-active {
+  opacity: 1;
+  transform: scale(0.9);
+  transform: translate(500px);
+  transition: all 500ms ease-in;
+}
+
+.slide-login-enter {
+  opacity: 0;
+  transform: scale(0.9);
+  transform: translateX(-500px);
+}
+.slide-login-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transform: translate(0);
+  transition: all 500ms ease-in;
+}
+.slide-login-exit {
+  opacity: 1;
+  transform: scale(1);
+  transform: translate(0);
+}
+.slide-login-exit-active {
+  opacity: 1;
+  transform: scale(0.9);
+  transform: translate(-500px);
+  transition: all 500ms ease-in;
+}

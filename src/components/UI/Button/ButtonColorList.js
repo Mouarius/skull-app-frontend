@@ -10,7 +10,7 @@ const ButtonColorList = (props) => {
       <ul className="flex flex-row items-center justify-between w-full mb-8">
         {_.map(teamColor, (color) => (
           <ButtonColor
-            key={`-key`}
+            key={color}
             color={color}
             takenColors={props.takenColors}
           />

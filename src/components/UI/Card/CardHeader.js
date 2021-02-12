@@ -6,7 +6,7 @@ const CardHeader = (props) => {
     if (hasBackLink) {
       return (
         <button className="mr-3 p-1.5 group rounded-full overflow-hidden transition-colors bg-content-100 hover:bg-content-200">
-          <Link to="/">
+          <Link to={{ pathname: '/', state: { fromRight: true } }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

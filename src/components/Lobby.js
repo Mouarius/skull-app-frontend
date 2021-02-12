@@ -1,9 +1,8 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { Link, useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { socket } from '../connection/socket'
 import PlayersList from './Player/PlayersList'
-import _ from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectPlayer } from '../features/player/playerSlice'
 import { addPlayer, selectGame, setGame } from '../features/game/gameSlice'
@@ -11,7 +10,6 @@ import Button from './UI/Button/Button'
 import ButtonColorList from './UI/Button/ButtonColorList'
 import InputText from './UI/Input/InputText'
 import Card from './UI/Card/Card'
-import Notification from './Notification/Notification'
 
 const Lobby = () => {
   const dispatch = useDispatch()
@@ -73,21 +71,19 @@ const Lobby = () => {
   }, [])
 
   return (
-    <div id="login-window" className="flex flex-col items-center pt-8">
-      <Card title="Lobby" hasBackLink={true}>
-        <div className="mb-8">
-          <InputText
-            label="Code to join this game :"
-            readOnly
-            onFocus={copyToClipboard}
-            value={game.gameID}
-          />
-        </div>
-        <ButtonColorList takenColors={takenColors} />
-        <PlayersList players={game.players} />
-        {startOrReadyButton()}
-      </Card>
-    </div>
+    <Card title="Lobby" hasBackLink={true}>
+      <div className="mb-8">
+        <InputText
+          label="Code to join this game :"
+          readOnly
+          onFocus={copyToClipboard}
+          value={game.gameID}
+        />
+      </div>
+      <ButtonColorList takenColors={takenColors} />
+      <PlayersList players={game.players} />
+      {startOrReadyButton()}
+    </Card>
   )
 }
 
