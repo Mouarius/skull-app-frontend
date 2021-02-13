@@ -13,7 +13,6 @@ const initialState = {
 }
 
 export const setPlayerColorAndUpdate = (color) => (dispatch, getState) => {
-  const initialState = getState()
   dispatch(setColor(color))
   const updatedState = getState()
   dispatch(updatePlayer(updatedState.player))

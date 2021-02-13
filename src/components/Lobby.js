@@ -25,9 +25,6 @@ const Lobby = () => {
     document.execCommand('copy')
   }
 
-  const handleLoginSubmit = (e) => {
-    e.preventDefault()
-  }
   const startOrReadyButton = () => {
     if (player.id === game.ownerID) {
       return <Button className="w-full">Start</Button>
@@ -41,7 +38,7 @@ const Lobby = () => {
     }
   }, [game])
 
-  //* At each render, asks the server if the game trying to be rendered exists
+  //* At first render, asks the server if the game trying to be rendered exists
   useEffect(() => {
     const fetchGamesList = async () => {
       try {
