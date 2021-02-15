@@ -7,7 +7,7 @@ const PlayersList = ({ players }) => {
   return (
     <div className="mb-8">
       <h2>Players</h2>
-      <ul className="flex flex-row flex-wrap">
+      <ul className="flex flex-col flex-wrap">
         {players.map((player) => (
           <li className="px-2 font-light text-md" key={player.id}>
             {player.username}

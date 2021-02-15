@@ -22,7 +22,7 @@ const Login = () => {
       // if user has defined his username
       // First, create a new game request to the server, to create a room in socket.io
       // Then get this room id, and make the player to join it
-      socket.emit('create_game/request', { player: player })
+      socket.emit('create_game/request', player)
       // We must wait for the response to redirect the player to the new game and new room
     }
     //TODO : Display notification to ask the user to give a username
@@ -37,16 +37,16 @@ const Login = () => {
     }
   }
 
-  const joinGame = (payload) => {
+  const joinGame = (game) => {
     // window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player))
-    if (payload.game) {
-      history.push('/game/' + payload.game.gameID)
+    if (game) {
+      history.push('/game/' + game.gameID)
     }
   }
 
   useEffect(() => {
-    socket.on('create_game/status', joinGame)
-    socket.on('join_game/status', joinGame)
+    socket.on('create_game/response', joinGame)
+    socket.on('join_game/response', joinGame)
   }, [])
 
   return (

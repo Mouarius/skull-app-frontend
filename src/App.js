@@ -11,7 +11,7 @@ function App() {
 
   const displayLobby = () => {
     if (!player.username) {
-      return <Redirect to="/login" />
+      return <Redirect to="/" />
     }
     return <Lobby />
   }

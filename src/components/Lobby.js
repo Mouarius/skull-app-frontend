@@ -56,12 +56,12 @@ const Lobby = () => {
   useEffect(() => {
     let mounted = true
     if (mounted) {
-      socket.on('player_joined', (payload) => {
-        console.log(`A user has logged in : ${payload.player.username}`)
-        dispatch(addPlayer(payload.player))
+      socket.on('player_joined', (player) => {
+        console.log(`A user has logged in : ${player.username}`)
+        dispatch(addPlayer(player))
       })
-      socket.on('game_updated', (payload) => {
-        dispatch(setGame(payload.game))
+      socket.on('game_updated', (game) => {
+        dispatch(setGame(game))
       })
     }
     return () => (mounted = false) // Cleanup fix
