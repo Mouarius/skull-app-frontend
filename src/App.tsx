@@ -1,20 +1,26 @@
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
-import Lobby from './components/Lobby'
-import Login from './components/Login'
-import { useSelector } from 'react-redux'
-import { selectPlayer } from './features/player/playerSlice'
-import Notification from './components/Notification/Notification'
-import { CSSTransition } from 'react-transition-group'
+import * as React from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  RouteChildrenProps,
+} from 'react-router-dom';
+import Lobby from './components/Lobby';
+import Login from './components/Login';
+import { useSelector } from 'react-redux';
+import { selectPlayer } from './features/player/playerSlice';
+import Notification from './components/Notification/Notification';
+import { CSSTransition } from 'react-transition-group';
 
-function App() {
-  const player = useSelector(selectPlayer)
+const App: React.FC = () => {
+  const player = useSelector(selectPlayer);
 
   const displayLobby = () => {
     if (!player.username) {
-      return <Redirect to="/" />
+      return <Redirect to="/" />;
     }
-    return <Lobby />
-  }
+    return <Lobby />;
+  };
 
   return (
     <Router>
@@ -23,7 +29,7 @@ function App() {
           Skull App_
         </h1>
         <Route path="/game/:gameID">
-          {(props) => (
+          {(props: RouteChildrenProps) => (
             <CSSTransition
               in={props.match != null}
               classNames="slide-lobby"
@@ -35,7 +41,7 @@ function App() {
           )}
         </Route>
         <Route exact path="/">
-          {(props) => (
+          {(props: RouteChildrenProps) => (
             <CSSTransition
               in={props.match != null}
               classNames="slide-login"
@@ -55,7 +61,7 @@ function App() {
         <Notification type="info" message="An info message" />
       </div>
     </Router>
-  )
-}
+  );
+};
 
-export default App
+export default App;

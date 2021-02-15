@@ -1,71 +1,72 @@
-import axios from 'axios'
-import { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import { socket } from '../connection/socket'
-import PlayersList from './Player/PlayersList'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectPlayer } from '../features/player/playerSlice'
-import { addPlayer, selectGame, setGame } from '../features/game/gameSlice'
-import Button from './UI/Button/Button'
-import ButtonColorList from './UI/Button/ButtonColorList'
-import InputText from './UI/Input/InputText'
-import Card from './UI/Card/Card'
+import React from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { socket } from '../connection/socket';
+import PlayersList from './Player/PlayersList';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectPlayer } from '../features/player/playerSlice';
+import { addPlayer, selectGame, setGame } from '../features/game/gameSlice';
+import Button from './UI/Button/Button';
+import ButtonColorList from './UI/Button/ButtonColorList';
+import InputText from './UI/Input/InputText';
+import Card from './UI/Card/Card';
 
 const Lobby = () => {
-  const dispatch = useDispatch()
-  const player = useSelector(selectPlayer)
-  const game = useSelector(selectGame)
+  const dispatch = useDispatch();
+  const player = useSelector(selectPlayer);
+  const game = useSelector(selectGame);
 
-  const history = useHistory()
-  let params = useParams()
-  const [takenColors, setTakenColors] = useState([])
+  const history = useHistory();
+  let params = useParams();
+  const [takenColors, setTakenColors] = useState([]);
 
   const copyToClipboard = (e) => {
-    e.target.select()
-    document.execCommand('copy')
-  }
+    e.target.select();
+    document.execCommand('copy');
+  };
 
   const startOrReadyButton = () => {
     if (player.id === game.ownerID) {
-      return <Button className="w-full">Start</Button>
+      return <Button className="w-full">Start</Button>;
     }
-    return <Button className="w-full">Ready</Button>
-  }
+    return <Button className="w-full">Ready</Button>;
+  };
 
   useEffect(() => {
     if (game.players) {
-      setTakenColors(game.players.map((player) => player.color))
+      setTakenColors(game.players.map((player) => player.color));
     }
-  }, [game])
+  }, [game]);
 
   //* At first render, asks the server if the game trying to be rendered exists
   useEffect(() => {
     const fetchGamesList = async () => {
       try {
-        const response = await axios.get('/api/games/' + params.gameID)
-        dispatch(setGame(response.data))
+        const response = await axios.get('/api/games/' + params.gameID);
+        dispatch(setGame(response.data));
       } catch (e) {
         // If it doesnt exist, redirect the user to home
-        history.push('/')
+        history.push('/');
       }
-    }
-    fetchGamesList()
-  }, [])
+    };
+    fetchGamesList();
+  }, []);
 
   // * Socket listeners
   useEffect(() => {
-    let mounted = true
+    let mounted = true;
     if (mounted) {
       socket.on('player_joined', (player) => {
-        console.log(`A user has logged in : ${player.username}`)
-        dispatch(addPlayer(player))
-      })
+        console.log(`A user has logged in : ${player.username}`);
+        dispatch(addPlayer(player));
+      });
       socket.on('game_updated', (game) => {
-        dispatch(setGame(game))
-      })
+        dispatch(setGame(game));
+      });
     }
-    return () => (mounted = false) // Cleanup fix
-  }, [])
+    return () => (mounted = false); // Cleanup fix
+  }, []);
 
   return (
     <Card title="Lobby" hasBackLink={true}>
@@ -81,7 +82,7 @@ const Lobby = () => {
       <PlayersList players={game.players} />
       {startOrReadyButton()}
     </Card>
-  )
-}
+  );
+};
 
-export default Lobby
+export default Lobby;

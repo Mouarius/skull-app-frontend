@@ -1,7 +1,7 @@
 export const cardType = {
   FLOWER: 'flower',
   SKULL: 'skull',
-}
+};
 
 export const teamColor = {
   RED: 'red',
@@ -11,4 +11,4 @@ export const teamColor = {
   BLUE: 'blue',
   PURPLE: 'purple',
   BLACK: 'black',
-}
+};

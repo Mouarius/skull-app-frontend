@@ -1,44 +1,49 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectGame } from '../../../features/game/gameSlice'
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { socket } from '../../../connection/socket';
+import { selectGame } from '../../../features/game/gameSlice';
 import {
   selectPlayer,
+  setColor,
   setPlayerColorAndUpdate,
-} from '../../../features/player/playerSlice'
+} from '../../../features/player/playerSlice';
+import Button from './Button';
 
-import './ButtonColor.scss'
+import './ButtonColor.scss';
 
 const ButtonColor = (props) => {
-  const player = useSelector(selectPlayer)
-  const game = useSelector(selectGame)
-  const dispatch = useDispatch()
+  const player = useSelector(selectPlayer);
+  const game = useSelector(selectGame);
+  const dispatch = useDispatch();
 
   const handleColorChange = (e) => {
-    dispatch(setPlayerColorAndUpdate(e.target.value))
-  }
+    console.log(`Clicked`);
+    socket.emit('change_color/request', { player: player, color: props.color });
+    dispatch(setColor(e.target.value));
+  };
 
   const isChecked = () => {
     if (props.color === player.color) {
-      return 'checked'
+      return 'checked';
     }
-  }
+  };
 
   const isTaken = () => {
     const colorIsTaken = props.takenColors.find(
       (color) => color === props.color
-    )
+    );
     if (!!colorIsTaken && colorIsTaken !== player.color) {
-      return 'taken'
+      return 'taken';
     }
-  }
+  };
 
   const findPlayerRelatedToColor = (color) => {
-    const player = game.players.find((player) => player.color === color)
+    const player = game.players.find((player) => player.color === color);
     if (player) {
-      return player.username
+      return player.username;
     }
-    return ''
-  }
+    return '';
+  };
 
   return (
     <li className="ButtonColor">
@@ -65,7 +70,7 @@ const ButtonColor = (props) => {
         />
       </label>
     </li>
-  )
-}
+  );
+};
 
-export default ButtonColor
+export default ButtonColor;
