@@ -1,7 +1,12 @@
-import React from 'react'
-import CardHeader from './CardHeader'
+import React from 'react';
+import CardHeader from './CardHeader';
 
-const Card = (props) => {
+export interface CardProps {
+  title: string;
+  hasBackLink: boolean;
+}
+
+const Card: React.FC<CardProps> = (props) => {
   return (
     <div className="w-screen p-8 bg-white shadow-md card rounded-2xl sm:w-96">
       <div className="card-body">
@@ -9,6 +14,6 @@ const Card = (props) => {
         {props.children}
       </div>
     </div>
-  )
-}
-export default Card
+  );
+};
+export default Card;

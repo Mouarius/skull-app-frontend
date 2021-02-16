@@ -1,9 +1,12 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { CardProps } from './Card';
 
-const CardHeader = (props) => {
-  const backLink = (hasBackLink) => {
-    if (hasBackLink) {
+type CardHeaderProps = CardProps;
+
+const CardHeader: React.FC<CardHeaderProps> = (props) => {
+  const displayBackLink = () => {
+    if (props.hasBackLink) {
       return (
         <button className="mr-3 p-1.5 group rounded-full overflow-hidden transition-colors bg-content-100 hover:bg-content-200">
           <Link to={{ pathname: '/', state: { fromRight: true } }}>
@@ -23,18 +26,18 @@ const CardHeader = (props) => {
             </svg>{' '}
           </Link>
         </button>
-      )
+      );
     }
-    return null
-  }
+    return null;
+  };
   return (
     <header className="flex flex-row items-center mb-4 card-header">
-      {backLink(props.hasBackLink)}
+      {displayBackLink()}
       <h1 className="font-semibold text-gray-800 font-display">
         {props.title}
       </h1>
     </header>
-  )
-}
+  );
+};
 
-export default CardHeader
+export default CardHeader;
