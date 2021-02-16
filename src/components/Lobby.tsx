@@ -16,7 +16,7 @@ import Button from './UI/Button/Button';
 import ButtonColorList from './UI/Button/ButtonColorList';
 import InputText from './UI/Input/InputText';
 import Card from './UI/Card/Card';
-import { TeamColor } from '../util/types';
+import { ITakenColors } from '../util/types';
 
 interface ParamTypes {
   gameID: string;
@@ -26,11 +26,9 @@ const Lobby: React.FC = () => {
   const dispatch = useDispatch();
   const player = useSelector(selectPlayer);
   const game = useSelector(selectGame);
-
   const history = useHistory();
   const params = useParams<ParamTypes>();
-  type ITakenColor = (TeamColor | null)[];
-  const [takenColors, setTakenColors] = useState<ITakenColor>([]);
+  const [takenColors, setTakenColors] = useState<ITakenColors>([]);
 
   const copyToClipboard = (): void => {
     navigator.clipboard.writeText(game.gameID);

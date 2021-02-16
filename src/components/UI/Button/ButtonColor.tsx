@@ -2,13 +2,13 @@ import React, { ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../../../connection/socket';
 import { selectPlayer, setColor } from '../../../features/player/playerSlice';
-import { TeamColor } from '../../../util/types';
+import { ITakenColors, TeamColor } from '../../../util/types';
 
 import './ButtonColor.scss';
 
 interface ButtonColorProps {
   color: TeamColor;
-  takenColors: TeamColor[];
+  takenColors: ITakenColors;
 }
 
 const ButtonColor: React.FC<ButtonColorProps> = (props) => {

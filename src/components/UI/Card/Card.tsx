@@ -3,7 +3,7 @@ import CardHeader from './CardHeader';
 
 export interface CardProps {
   title: string;
-  hasBackLink: boolean;
+  hasBackLink?: boolean;
 }
 
 const Card: React.FC<CardProps> = (props) => {

@@ -1,10 +1,10 @@
 import React from 'react';
 import ButtonColor from './ButtonColor';
 import _ from 'lodash';
-import { TeamColor } from '../../../util/types';
+import { ITakenColors, TeamColor } from '../../../util/types';
 
 interface ButtonColorListProps {
-  takenColors: TeamColor[];
+  takenColors: ITakenColors;
 }
 
 const ButtonColorList: React.FC<ButtonColorListProps> = (props) => {

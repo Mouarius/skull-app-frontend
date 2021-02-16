@@ -6,6 +6,7 @@ import { selectPlayer, setUsername } from '../features/player/playerSlice';
 import Button from './UI/Button/Button';
 import InputText from './UI/Input/InputText';
 import Card from './UI/Card/Card';
+import { GameState } from '../features/game/gameSlice';
 
 const Login: React.FC = () => {
   const history = useHistory();
@@ -13,7 +14,7 @@ const Login: React.FC = () => {
   const player = useSelector(selectPlayer);
   const [inputGameID, setInputGameID] = useState('');
 
-  const handleUsernameChange = (e) => {
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setUsername(e.target.value));
   };
 
@@ -28,6 +29,10 @@ const Login: React.FC = () => {
     //TODO : Display notification to ask the user to give a username
   };
 
+  const handleInputGameIDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputGameID(e.target.value);
+  };
+
   const handleJoinGameButton = () => {
     if (inputGameID) {
       socket.emit('join_game/request', {
@@ -38,7 +43,7 @@ const Login: React.FC = () => {
     }
   };
 
-  const joinGame = (game) => {
+  const joinGame = (game: GameState) => {
     // window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player))
     if (game) {
       history.push('/game/' + game.gameID);
@@ -68,7 +73,7 @@ const Login: React.FC = () => {
           id="game-id-input"
           placeholder="game_id"
           value={inputGameID}
-          onChange={(e) => setInputGameID(e.target.value)}
+          onChange={handleInputGameIDChange}
         />
         <Button onClick={handleJoinGameButton}>join</Button>
       </div>

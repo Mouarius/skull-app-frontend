@@ -13,3 +13,9 @@ export enum CardType {
   FLOWER = 'flower',
   SKULL = 'skull',
 }
+
+export interface BaseComponentProps {
+  className?: string;
+}
+
+export type ITakenColors = (TeamColor | null)[];

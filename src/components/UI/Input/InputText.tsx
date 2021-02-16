@@ -1,6 +1,14 @@
-import React from 'react'
+import React, { ChangeEvent, FocusEvent } from 'react';
+import { BaseComponentProps } from '../../../util/types';
 
-const InputText = (props) => {
+type InputTextProps = BaseComponentProps &
+  Partial<HTMLInputElement> & {
+    label?: string;
+    onChange?: React.EventHandler<ChangeEvent>;
+    onFocus?: React.EventHandler<FocusEvent>;
+  };
+
+const InputText: React.FC<InputTextProps> = (props) => {
   return (
     <form>
       <label className="text-xs font-normal text-gray-400 " htmlFor={props.id}>
@@ -17,7 +25,7 @@ const InputText = (props) => {
         className="w-full p-0.5 pl-2 border-2 outline-none border-gray-200 border-solid transition-all rounded-lg focus:ring-purple focus:ring-opacity-50 focus:ring-2 focus:ring-offset-2"
       />
     </form>
-  )
-}
+  );
+};
 
-export default InputText
+export default InputText;

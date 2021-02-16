@@ -1,7 +1,8 @@
 import React, { EventHandler, MouseEvent } from 'react';
+import { BaseComponentProps } from '../../../util/types';
 
-interface ButtonProps {
-  onClick: EventHandler<MouseEvent>;
+interface ButtonProps extends BaseComponentProps {
+  onClick?: EventHandler<MouseEvent>;
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
