@@ -59,12 +59,15 @@ const Login: React.FC = () => {
     <Card title="Login">
       <InputText
         label="Username"
-        id="username"
+        id="username-input"
         placeholder="username"
         value={player.username}
         onChange={handleUsernameChange}
       />
-      <Button className="w-full mt-2" onClick={handleCreateGameButton}>
+      <Button
+        className="w-full mt-2 create-game-button"
+        onClick={handleCreateGameButton}
+      >
         create a game
       </Button>
       <div className="flex flex-col p-2 mt-4 space-y-4 border-2 rounded-lg border-purple">
@@ -75,7 +78,9 @@ const Login: React.FC = () => {
           value={inputGameID}
           onChange={handleInputGameIDChange}
         />
-        <Button onClick={handleJoinGameButton}>join</Button>
+        <Button onClick={handleJoinGameButton} className="join-game-button">
+          join
+        </Button>
       </div>
     </Card>
   );
