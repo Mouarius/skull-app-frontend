@@ -61,7 +61,7 @@ const playerSlice = createSlice({
   },
 });
 
-export const selectPlayer = (state: RootState) => state.player;
+export const selectPlayer = (state: RootState): Player => state.player;
 
 export const {
   setPlayer,

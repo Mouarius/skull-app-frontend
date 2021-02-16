@@ -1,32 +1,42 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { socket } from '../connection/socket';
 import PlayersList from './Player/PlayersList';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectPlayer } from '../features/player/playerSlice';
-import { addPlayer, selectGame, setGame } from '../features/game/gameSlice';
+import { Player, selectPlayer } from '../features/player/playerSlice';
+import {
+  addPlayer,
+  GameState,
+  selectGame,
+  setGame,
+} from '../features/game/gameSlice';
 import Button from './UI/Button/Button';
 import ButtonColorList from './UI/Button/ButtonColorList';
 import InputText from './UI/Input/InputText';
 import Card from './UI/Card/Card';
+import { TeamColor } from '../util/types';
 
-const Lobby = () => {
+interface ParamTypes {
+  gameID: string;
+}
+
+const Lobby: React.FC = () => {
   const dispatch = useDispatch();
   const player = useSelector(selectPlayer);
   const game = useSelector(selectGame);
 
   const history = useHistory();
-  let params = useParams();
-  const [takenColors, setTakenColors] = useState([]);
+  const params = useParams<ParamTypes>();
+  type ITakenColor = (TeamColor | null)[];
+  const [takenColors, setTakenColors] = useState<ITakenColor>([]);
 
-  const copyToClipboard = (e) => {
-    e.target.select();
-    document.execCommand('copy');
+  const copyToClipboard = (): void => {
+    navigator.clipboard.writeText(game.gameID);
   };
 
-  const startOrReadyButton = () => {
+  const startOrReadyButton = (): ReactElement => {
     if (player.id === game.ownerID) {
       return <Button className="w-full">Start</Button>;
     }
@@ -54,18 +64,24 @@ const Lobby = () => {
   }, []);
 
   // * Socket listeners
+  // TODO Add enum types for listeners
   useEffect(() => {
     let mounted = true;
     if (mounted) {
-      socket.on('player_joined', (player) => {
+      socket.on('player_joined', (player: Player) => {
         console.log(`A user has logged in : ${player.username}`);
         dispatch(addPlayer(player));
       });
-      socket.on('game_updated', (game) => {
+      socket.on('game_updated', (game: GameState) => {
         dispatch(setGame(game));
       });
+      socket.on('change_color/response', (player: Player) => {
+        console.log(`You have changed your color to ${player.color}`);
+      });
     }
-    return () => (mounted = false); // Cleanup fix
+    return () => {
+      mounted = false;
+    }; // Cleanup fix
   }, []);
 
   return (

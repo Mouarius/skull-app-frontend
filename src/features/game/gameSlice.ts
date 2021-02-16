@@ -33,7 +33,7 @@ const gameSlice = createSlice({
   },
 });
 
-export const selectGame = (state: RootState) => state.game;
+export const selectGame = (state: RootState): GameState => state.game;
 
 export const {
   addPlayer,

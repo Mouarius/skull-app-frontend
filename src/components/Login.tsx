@@ -7,7 +7,7 @@ import Button from './UI/Button/Button';
 import InputText from './UI/Input/InputText';
 import Card from './UI/Card/Card';
 
-const Login = () => {
+const Login: React.FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const player = useSelector(selectPlayer);
