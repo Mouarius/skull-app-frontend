@@ -1,8 +1,13 @@
-import React from 'react'
+import React from 'react';
+import { Player } from '../../features/player/playerSlice';
 
-const PlayersList = ({ players }) => {
+interface PlayerListProps {
+  players: Player[];
+}
+
+const PlayersList: React.FC<PlayerListProps> = ({ players }) => {
   if (!players) {
-    return null
+    return null;
   }
   return (
     <div className="mb-8">
@@ -15,7 +20,7 @@ const PlayersList = ({ players }) => {
         ))}
       </ul>
     </div>
-  )
-}
+  );
+};
 
-export default PlayersList
+export default PlayersList;
