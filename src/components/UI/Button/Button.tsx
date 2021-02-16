@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { EventHandler, MouseEvent } from 'react';
 
-const Button = (props) => {
+interface ButtonProps {
+  onClick: EventHandler<MouseEvent>;
+}
+
+const Button: React.FC<ButtonProps> = (props) => {
   return (
     <button
       onClick={props.onClick}
@@ -8,7 +12,7 @@ const Button = (props) => {
     >
       {props.children}
     </button>
-  )
-}
+  );
+};
 
-export default Button
+export default Button;
