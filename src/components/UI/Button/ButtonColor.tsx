@@ -1,22 +1,21 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../../../connection/socket';
-import { selectGame } from '../../../features/game/gameSlice';
-import {
-  selectPlayer,
-  setColor,
-  setPlayerColorAndUpdate,
-} from '../../../features/player/playerSlice';
-import Button from './Button';
+import { selectPlayer, setColor } from '../../../features/player/playerSlice';
+import { TeamColor } from '../../../util/types';
 
 import './ButtonColor.scss';
 
-const ButtonColor = (props) => {
+interface ButtonColorProps {
+  color: TeamColor;
+  takenColors: TeamColor[];
+}
+
+const ButtonColor: React.FC<ButtonColorProps> = (props) => {
   const player = useSelector(selectPlayer);
-  const game = useSelector(selectGame);
   const dispatch = useDispatch();
 
-  const handleColorChange = (e) => {
+  const handleColorChange = (e: ChangeEvent<HTMLInputElement>) => {
     console.log(`Clicked`);
     socket.emit('change_color/request', { player: player, color: props.color });
     dispatch(setColor(e.target.value));
@@ -35,14 +34,6 @@ const ButtonColor = (props) => {
     if (!!colorIsTaken && colorIsTaken !== player.color) {
       return 'taken';
     }
-  };
-
-  const findPlayerRelatedToColor = (color) => {
-    const player = game.players.find((player) => player.color === color);
-    if (player) {
-      return player.username;
-    }
-    return '';
   };
 
   return (
