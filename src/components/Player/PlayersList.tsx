@@ -14,8 +14,14 @@ const PlayersList: React.FC<PlayerListProps> = ({ players }) => {
       <h2>Players</h2>
       <ul className="flex flex-col flex-wrap">
         {players.map((player) => (
-          <li className="px-2 font-light text-md" key={player.id}>
-            {player.username}
+          <li
+            className="flex flex-row items-center px-2 font-light text-md"
+            key={player.id}
+          >
+            <span>{player.username} </span>
+            <span
+              className={`m-2 h-3 w-3 rounded-full bg-${player.color}`}
+            ></span>
           </li>
         ))}
       </ul>

@@ -5,12 +5,13 @@ import { useHistory, useParams } from 'react-router-dom';
 import { socket } from '../connection/socket';
 import PlayersList from './Player/PlayersList';
 import { useDispatch, useSelector } from 'react-redux';
-import { Player, selectPlayer } from '../features/player/playerSlice';
+import { Player, selectPlayer, setColor } from '../features/player/playerSlice';
 import {
   addPlayer,
   GameState,
   selectGame,
   setGame,
+  updatePlayer,
 } from '../features/game/gameSlice';
 import Button from './UI/Button/Button';
 import ButtonColorList from './UI/Button/ButtonColorList';
@@ -66,15 +67,22 @@ const Lobby: React.FC = () => {
   useEffect(() => {
     let mounted = true;
     if (mounted) {
-      socket.on('player_joined', (player: Player) => {
+      socket.on('lobby/player_joined', (player: Player) => {
         console.log(`A user has logged in : ${player.username}`);
         dispatch(addPlayer(player));
       });
-      socket.on('game_updated', (game: GameState) => {
+      socket.on('lobby/game_updated', (game: GameState) => {
         dispatch(setGame(game));
       });
-      socket.on('change_color/response', (player: Player) => {
+      socket.on('lobby/change_color/response', (player: Player) => {
         console.log(`You have changed your color to ${player.color}`);
+        dispatch(setColor(player.color));
+      });
+      socket.on('lobby/player_color_update', (player: Player) => {
+        console.log(
+          `The player ${player.username} changed his color to ${player.color}`
+        );
+        dispatch(updatePlayer(player));
       });
     }
     return () => {

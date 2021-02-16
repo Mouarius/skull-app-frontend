@@ -1,7 +1,12 @@
-import React from 'react'
+import React from 'react';
+import { NotificationType } from '../../util/types';
 
-function AlertLogo(props) {
-  const logoPath = (type) => {
+interface AlertLogoProps {
+  type: NotificationType;
+}
+
+const AlertLogo: React.FC<AlertLogoProps> = (props) => {
+  const displayLogoPath = (type: NotificationType) => {
     switch (type) {
       case 'error':
         return (
@@ -11,7 +16,7 @@ function AlertLogo(props) {
             strokeWidth={2}
             d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           />
-        )
+        );
       case 'info':
         return (
           <path
@@ -20,7 +25,7 @@ function AlertLogo(props) {
             strokeWidth={2}
             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           />
-        )
+        );
       case 'success':
         return (
           <path
@@ -29,11 +34,11 @@ function AlertLogo(props) {
             strokeWidth={2}
             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
           />
-        )
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -42,26 +47,31 @@ function AlertLogo(props) {
       stroke="currentColor"
       className="h-6"
     >
-      {logoPath(props.type)}
+      {displayLogoPath(props.type)}
     </svg>
-  )
+  );
+};
+
+interface NotificationProps {
+  type: NotificationType;
+  message: string;
 }
 
-const Notification = (props) => {
-  let colorClass = (type) => {
-    switch (props.type) {
+const Notification: React.FC<NotificationProps> = (props) => {
+  const colorClass = (type: NotificationType) => {
+    switch (type) {
       case 'error':
-        return 'bg-red-100 text-red-dark'
+        return 'bg-red-100 text-red-dark';
       case 'info':
-        return 'bg-blue-100 text-blue-dark'
+        return 'bg-blue-100 text-blue-dark';
 
       case 'success':
-        return 'bg-green-100 text-green-dark'
+        return 'bg-green-100 text-green-dark';
 
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-gray-800';
     }
-  }
+  };
 
   return (
     <div
@@ -72,7 +82,7 @@ const Notification = (props) => {
       <AlertLogo type={props.type} />
       <label className="ml-2">{props.message}</label>
     </div>
-  )
-}
+  );
+};
 
-export default Notification
+export default Notification;

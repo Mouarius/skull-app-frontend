@@ -15,25 +15,37 @@ const ButtonColor: React.FC<ButtonColorProps> = (props) => {
   const player = useSelector(selectPlayer);
   const dispatch = useDispatch();
 
-  const handleColorChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(`Clicked`);
-    socket.emit('change_color/request', { player: player, color: props.color });
-    dispatch(setColor(e.target.value));
+  const handleColorChange = (_e: ChangeEvent<HTMLInputElement>) => {
+    socket.emit('lobby/change_color/request', {
+      player: player,
+      color: props.color,
+    });
+    console.log(`Handle color change`);
   };
 
-  const isChecked = () => {
+  const isChecked = (): string => {
     if (props.color === player.color) {
+      console.log(
+        '🚀 ~ file: ButtonColor.tsx ~ line 27 ~ isChecked ~ player.color',
+        player.color
+      );
+      console.log(
+        '🚀 ~ file: ButtonColor.tsx ~ line 27 ~ isChecked ~ props.color',
+        props.color
+      );
       return 'checked';
     }
+    return '';
   };
 
-  const isTaken = () => {
+  const isTaken = (): string => {
     const colorIsTaken = props.takenColors.find(
       (color) => color === props.color
     );
     if (!!colorIsTaken && colorIsTaken !== player.color) {
       return 'taken';
     }
+    return '';
   };
 
   return (

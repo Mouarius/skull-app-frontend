@@ -1,5 +1,4 @@
 export enum TeamColor {
-  NULL = '',
   RED = 'red',
   ORANGE = 'orange',
   YELLOW = 'yellow',
@@ -19,3 +18,9 @@ export interface BaseComponentProps {
 }
 
 export type ITakenColors = (TeamColor | null)[];
+
+export enum NotificationType {
+  ERROR = 'error',
+  SUCCESS = 'success',
+  INFO = 'info',
+}

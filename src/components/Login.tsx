@@ -23,7 +23,7 @@ const Login: React.FC = () => {
       // if user has defined his username
       // First, create a new game request to the server, to create a room in socket.io
       // Then get this room id, and make the player to join it
-      socket.emit('create_game/request', player);
+      socket.emit('login/create_game/request', player);
       // We must wait for the response to redirect the player to the new game and new room
     }
     //TODO : Display notification to ask the user to give a username
@@ -35,7 +35,7 @@ const Login: React.FC = () => {
 
   const handleJoinGameButton = () => {
     if (inputGameID) {
-      socket.emit('join_game/request', {
+      socket.emit('login/join_game/request', {
         player: player,
         gameID: inputGameID,
       });
@@ -51,8 +51,8 @@ const Login: React.FC = () => {
   };
 
   useEffect(() => {
-    socket.on('create_game/response', joinGame);
-    socket.on('join_game/response', joinGame);
+    socket.on('login/create_game/response', joinGame);
+    socket.on('login/join_game/response', joinGame);
   }, []);
 
   return (

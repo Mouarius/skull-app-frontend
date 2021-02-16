@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { selectPlayer } from './features/player/playerSlice';
 import Notification from './components/Notification/Notification';
 import { CSSTransition } from 'react-transition-group';
+import { NotificationType } from './util/types';
 
 const App: React.FC = () => {
   const player = useSelector(selectPlayer);
@@ -58,7 +59,7 @@ const App: React.FC = () => {
           }}
         </Route> */}
 
-        <Notification type="info" message="An info message" />
+        <Notification type={NotificationType.INFO} message="An info message" />
       </div>
     </Router>
   );

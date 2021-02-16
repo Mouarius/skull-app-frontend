@@ -9,7 +9,7 @@ interface ButtonColorListProps {
 
 const ButtonColorList: React.FC<ButtonColorListProps> = (props) => {
   return (
-    <div className="ButtonColorList">
+    <div className="p-0 list-none">
       <h2 className="mb-2">Select your color :</h2>
       <ul className="flex flex-row items-center justify-between w-full mb-8">
         {_.map(Object.values(TeamColor), (color) => (
