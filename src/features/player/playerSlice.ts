@@ -8,6 +8,7 @@ export interface Player {
   color: TeamColor | null;
   username: string;
   deck: Deck | null;
+  isReady: boolean;
   hasWonOneRound: boolean;
   hasWonTheGame: boolean;
   id: string;
@@ -17,6 +18,7 @@ const initialState: Player = {
   username: '',
   color: null,
   deck: null,
+  isReady: false,
   hasWonOneRound: false,
   hasWonTheGame: false,
   id: uuidv4(),
@@ -51,6 +53,9 @@ const playerSlice = createSlice({
     setColor: (state, action: PayloadAction<TeamColor | null>) => {
       return { ...state, color: action.payload };
     },
+    toggleReady: (state) => {
+      return { ...state, isReady: !state.isReady };
+    },
     win: (state) => {
       if (state.hasWonOneRound) {
         state.hasWonTheGame = true;
@@ -68,6 +73,7 @@ export const {
   createDeck,
   setUsername,
   setColor,
+  toggleReady,
   win,
 } = playerSlice.actions;
 

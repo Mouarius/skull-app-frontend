@@ -1,6 +1,8 @@
-const colors = require('tailwindcss/colors')
-const plugin = require('tailwindcss/plugin')
-const defaultTheme = require('tailwindcss/defaultTheme')
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-var-requires */
+const colors = require('tailwindcss/colors');
+const plugin = require('tailwindcss/plugin');
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
@@ -76,6 +78,11 @@ module.exports = {
       transform: ['active'],
       scale: ['active'],
       translate: ['active', 'group-hover'],
+      opacity: ['disabled'],
+      backgroundColor: ['disabled'],
+      textColor: ['disabled'],
+      borderColor: ['disabled'],
+      cursor: ['disabled'],
     },
   },
   plugins: [
@@ -95,9 +102,9 @@ module.exports = {
             backgroundColor: '#cc1f1a',
           },
         },
-      }
+      };
 
-      addComponents(buttons)
+      addComponents(buttons);
     }),
   ],
-}
+};

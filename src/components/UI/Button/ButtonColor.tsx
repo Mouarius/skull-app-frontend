@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { socket } from '../../../connection/socket';
 import { selectPlayer, setColor } from '../../../features/player/playerSlice';
 import { ITakenColors, TeamColor } from '../../../util/types';
+import { IButtonProps } from './Button';
 
-import './ButtonColor.scss';
+import './ButtonColor.css';
 
-interface ButtonColorProps {
+interface ButtonColorProps extends IButtonProps {
   color: TeamColor;
   takenColors: ITakenColors;
 }
@@ -25,14 +26,6 @@ const ButtonColor: React.FC<ButtonColorProps> = (props) => {
 
   const isChecked = (): string => {
     if (props.color === player.color) {
-      console.log(
-        '🚀 ~ file: ButtonColor.tsx ~ line 27 ~ isChecked ~ player.color',
-        player.color
-      );
-      console.log(
-        '🚀 ~ file: ButtonColor.tsx ~ line 27 ~ isChecked ~ props.color',
-        props.color
-      );
       return 'checked';
     }
     return '';

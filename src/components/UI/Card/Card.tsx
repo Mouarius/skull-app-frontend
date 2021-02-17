@@ -1,12 +1,12 @@
 import React from 'react';
 import CardHeader from './CardHeader';
 
-export interface CardProps {
+export interface ICardProps {
   title: string;
   hasBackLink?: boolean;
 }
 
-const Card: React.FC<CardProps> = (props) => {
+const Card: React.FC<ICardProps> = (props) => {
   return (
     <div
       className={`${props.title}-card w-screen p-8 bg-white shadow-md card rounded-2xl sm:w-96`}

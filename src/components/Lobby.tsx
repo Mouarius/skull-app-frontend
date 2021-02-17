@@ -5,7 +5,12 @@ import { useHistory, useParams } from 'react-router-dom';
 import { socket } from '../connection/socket';
 import PlayersList from './Player/PlayersList';
 import { useDispatch, useSelector } from 'react-redux';
-import { Player, selectPlayer, setColor } from '../features/player/playerSlice';
+import {
+  Player,
+  selectPlayer,
+  setColor,
+  toggleReady,
+} from '../features/player/playerSlice';
 import {
   addPlayer,
   GameState,
@@ -35,11 +40,43 @@ const Lobby: React.FC = () => {
     navigator.clipboard.writeText(game.gameID);
   };
 
+  const handleReadyButton = (): void => {
+    console.log(`Ready clicked`);
+    socket.emit('lobby/player_ready', player);
+    dispatch(toggleReady());
+  };
+
+  const isStartButtonDisabled = (): boolean => {
+    const allPlayersAreReady = game.players.reduce((playersReady, current) => {
+      if (current.id != game.ownerID) {
+        return playersReady && current.isReady;
+      }
+      return true;
+    }, true);
+    return !allPlayersAreReady;
+  };
+  const handleStartButton = (): void => {
+    console.log('Start clicked');
+    socket.emit('lobby/start/request');
+  };
+
   const startOrReadyButton = (): ReactElement => {
     if (player.id === game.ownerID) {
-      return <Button className="w-full">Start</Button>;
+      return (
+        <Button
+          className="w-full"
+          disabled={isStartButtonDisabled()}
+          onClick={handleStartButton}
+        >
+          Start
+        </Button>
+      );
     }
-    return <Button className="w-full">Ready</Button>;
+    return (
+      <Button className="w-full" onClick={handleReadyButton}>
+        Ready
+      </Button>
+    );
   };
 
   useEffect(() => {
@@ -81,6 +118,14 @@ const Lobby: React.FC = () => {
       socket.on('lobby/player_color_update', (player: Player) => {
         console.log(
           `The player ${player.username} changed his color to ${player.color}`
+        );
+        dispatch(updatePlayer(player));
+      });
+      socket.on('lobby/player_ready', (player: Player) => {
+        console.log(
+          `The player ${player.username} is${
+            player.isReady ? '' : ' not'
+          } ready`
         );
         dispatch(updatePlayer(player));
       });

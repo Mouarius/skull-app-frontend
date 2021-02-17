@@ -1,0 +1,6 @@
+.button-disabled {
+  @apply bg-gray-100 border-gray-400 text-gray-400;
+}
+.button-disabled:hover {
+  @apply bg-gray-100 border-gray-400 text-gray-400;
+}

@@ -1,11 +1,11 @@
 import React from 'react';
 import { NotificationType } from '../../util/types';
 
-interface AlertLogoProps {
+interface IAlertLogoProps {
   type: NotificationType;
 }
 
-const AlertLogo: React.FC<AlertLogoProps> = (props) => {
+const AlertLogo: React.FC<IAlertLogoProps> = (props) => {
   const displayLogoPath = (type: NotificationType) => {
     switch (type) {
       case 'error':

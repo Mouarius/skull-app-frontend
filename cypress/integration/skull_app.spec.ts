@@ -1,7 +1,6 @@
-const APP_URL = 'http://localhost:3000';
 describe('SKULL_APP TESTS', () => {
   beforeEach(() => {
-    cy.visit(APP_URL);
+    cy.visit('/');
   });
   describe('INITIAL TESTS', () => {
     it('Can enter a username', () => {

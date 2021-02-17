@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CardProps } from './Card';
+import { ICardProps } from './Card';
 
-type CardHeaderProps = CardProps;
+type ICardHeaderProps = ICardProps;
 
-const CardHeader: React.FC<CardHeaderProps> = (props) => {
+const CardHeader: React.FC<ICardHeaderProps> = (props) => {
   const displayBackLink = () => {
     if (props.hasBackLink) {
       return (

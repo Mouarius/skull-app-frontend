@@ -59,7 +59,7 @@ const App: React.FC = () => {
           }}
         </Route> */}
 
-        <Notification type={NotificationType.INFO} message="An info message" />
+        {/* <Notification type={NotificationType.INFO} message="An info message" /> */}
       </div>
     </Router>
   );
