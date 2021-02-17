@@ -35,6 +35,7 @@ const Lobby: React.FC = () => {
   const history = useHistory();
   const params = useParams<ParamTypes>();
   const [takenColors, setTakenColors] = useState<ITakenColors>([]);
+  const [startButtonDisabled, setStartButtonDisabled] = useState<boolean>(true);
 
   const copyToClipboard = (): void => {
     navigator.clipboard.writeText(game.gameID);
@@ -46,14 +47,16 @@ const Lobby: React.FC = () => {
     dispatch(toggleReady());
   };
 
-  const isStartButtonDisabled = (): boolean => {
+  const areAllPlayersReady = (): boolean => {
+    console.log('game.players :>> ', game.players);
     const allPlayersAreReady = game.players.reduce((playersReady, current) => {
       if (current.id != game.ownerID) {
         return playersReady && current.isReady;
       }
-      return true;
+      return playersReady && true;
     }, true);
-    return !allPlayersAreReady;
+
+    return allPlayersAreReady;
   };
   const handleStartButton = (): void => {
     console.log('Start clicked');
@@ -65,7 +68,7 @@ const Lobby: React.FC = () => {
       return (
         <Button
           className="w-full"
-          disabled={isStartButtonDisabled()}
+          disabled={startButtonDisabled}
           onClick={handleStartButton}
         >
           Start
@@ -83,6 +86,7 @@ const Lobby: React.FC = () => {
     if (game.players) {
       setTakenColors(game.players.map((player) => player.color));
     }
+    setStartButtonDisabled(!areAllPlayersReady());
   }, [game]);
 
   //* At first render, asks the server if the game trying to be rendered exists

@@ -26,6 +26,11 @@ module.exports = {
       backgroundImage: (theme) => ({
         'app-dots': "url('./assets/body_background.svg')",
       }),
+      borderWidth: {
+        10: '10px',
+        12: '12px',
+        18: '18px',
+      },
       colors: {
         white: colors.white,
         black: colors.black,
@@ -83,6 +88,7 @@ module.exports = {
       textColor: ['disabled'],
       borderColor: ['disabled'],
       cursor: ['disabled'],
+      borderWidth: ['hover'],
     },
   },
   plugins: [

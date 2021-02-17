@@ -10,7 +10,7 @@ type InputTextProps = BaseComponentProps &
 
 const InputText: React.FC<InputTextProps> = (props) => {
   return (
-    <form>
+    <form onSubmit={(e) => e.preventDefault()}>
       <label className="text-xs font-normal text-gray-400 " htmlFor={props.id}>
         <span className="">{props.label}</span>
       </label>

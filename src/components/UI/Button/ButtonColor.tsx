@@ -5,8 +5,6 @@ import { selectPlayer, setColor } from '../../../features/player/playerSlice';
 import { ITakenColors, TeamColor } from '../../../util/types';
 import { IButtonProps } from './Button';
 
-import './ButtonColor.css';
-
 interface ButtonColorProps extends IButtonProps {
   color: TeamColor;
   takenColors: ITakenColors;
@@ -43,12 +41,14 @@ const ButtonColor: React.FC<ButtonColorProps> = (props) => {
 
   return (
     <li className="ButtonColor">
-      <label htmlFor={`${props.color}-radio`} className="radio-container">
+      <label htmlFor={`${props.color}-radio`} className="cursor-pointer">
         {/* <span className="taken-by-label">
           taken by : {findPlayerRelatedToColor(props.color)}
         </span> */}
         <span
-          className={`radio-mark bg-${props.color} ${isChecked()} ${isTaken()}`}
+          className={`radio-mark bg-${
+            props.color
+          } box-border flex h-14 w-14 sm:w-9 sm:h-9 rounded-full mx-1 border-solid transition-all shadow-sm border-gray-200 hover:border-10 ${isChecked()} ${isTaken()}`}
         ></span>
         <input
           type="radio"
@@ -62,7 +62,7 @@ const ButtonColor: React.FC<ButtonColorProps> = (props) => {
               ? true
               : false
           }
-          className={`color-radio`}
+          className={`hidden`}
         />
       </label>
     </li>
