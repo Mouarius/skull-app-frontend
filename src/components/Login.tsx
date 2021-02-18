@@ -16,6 +16,7 @@ const Login: React.FC = () => {
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setUsername(e.target.value));
+    console.log(player.username);
   };
 
   const handleCreateGameButton = () => {
@@ -44,16 +45,19 @@ const Login: React.FC = () => {
   };
 
   const joinGame = (game: GameState) => {
-    // window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player))
     if (game) {
+      console.log('JSON.stringify(player) :>> ', JSON.stringify(player));
+      window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player));
       history.push('/game/' + game.gameID);
     }
   };
-
   useEffect(() => {
     socket.on('login/create_game/response', joinGame);
     socket.on('login/join_game/response', joinGame);
-  }, []);
+    return () => {
+      socket.removeAllListeners();
+    };
+  });
 
   return (
     <Card title="Login">
@@ -69,6 +73,13 @@ const Login: React.FC = () => {
         onClick={handleCreateGameButton}
       >
         create a game
+      </Button>
+      <Button
+        onClick={() => {
+          console.log(player.username);
+        }}
+      >
+        get player data
       </Button>
       <div className="flex flex-col p-2 mt-4 space-y-4 border-2 rounded-lg border-purple">
         <InputText

@@ -9,6 +9,7 @@ import {
   Player,
   selectPlayer,
   setColor,
+  setPlayer,
   toggleReady,
 } from '../features/player/playerSlice';
 import {
@@ -48,7 +49,6 @@ const Lobby: React.FC = () => {
   };
 
   const areAllPlayersReady = (): boolean => {
-    console.log('game.players :>> ', game.players);
     const allPlayersAreReady = game.players.reduce((playersReady, current) => {
       if (current.id != game.ownerID) {
         return playersReady && current.isReady;
@@ -94,7 +94,16 @@ const Lobby: React.FC = () => {
     const fetchGamesList = async () => {
       try {
         const response = await axios.get('/api/games/' + params.gameID);
+        console.log(
+          '🚀 ~ file: Lobby.tsx ~ line 97 ~ fetchGamesList ~ response',
+          response
+        );
         dispatch(setGame(response.data));
+        const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
+        console.log(
+          '🚀 ~ file: Lobby.tsx ~ line 99 ~ fetchGamesList ~ currentPlayer',
+          currentPlayer
+        );
       } catch (e) {
         // If it doesnt exist, redirect the user to home
         history.push('/');
@@ -106,36 +115,32 @@ const Lobby: React.FC = () => {
   // * Socket listeners
   // TODO Add enum types for listeners
   useEffect(() => {
-    let mounted = true;
-    if (mounted) {
-      socket.on('lobby/player_joined', (player: Player) => {
-        console.log(`A user has logged in : ${player.username}`);
-        dispatch(addPlayer(player));
-      });
-      socket.on('lobby/game_updated', (game: GameState) => {
-        dispatch(setGame(game));
-      });
-      socket.on('lobby/change_color/response', (player: Player) => {
-        console.log(`You have changed your color to ${player.color}`);
-        dispatch(setColor(player.color));
-      });
-      socket.on('lobby/player_color_update', (player: Player) => {
-        console.log(
-          `The player ${player.username} changed his color to ${player.color}`
-        );
-        dispatch(updatePlayer(player));
-      });
-      socket.on('lobby/player_ready', (player: Player) => {
-        console.log(
-          `The player ${player.username} is${
-            player.isReady ? '' : ' not'
-          } ready`
-        );
-        dispatch(updatePlayer(player));
-      });
-    }
+    socket.on('lobby/player_joined', (player: Player) => {
+      console.log(`A user has logged in : ${player.username}`);
+      dispatch(addPlayer(player));
+    });
+    socket.on('lobby/game_updated', (game: GameState) => {
+      dispatch(setGame(game));
+    });
+    socket.on('lobby/change_color/response', (player: Player) => {
+      console.log(`You have changed your color to ${player.color}`);
+      dispatch(setColor(player.color));
+    });
+    socket.on('lobby/player_color_update', (player: Player) => {
+      console.log(
+        `The player ${player.username} changed his color to ${player.color}`
+      );
+      dispatch(updatePlayer(player));
+    });
+    socket.on('lobby/player_ready', (player: Player) => {
+      console.log(
+        `The player ${player.username} is${player.isReady ? '' : ' not'} ready`
+      );
+      dispatch(updatePlayer(player));
+    });
+
     return () => {
-      mounted = false;
+      socket.removeAllListeners();
     }; // Cleanup fix
   }, []);
 
