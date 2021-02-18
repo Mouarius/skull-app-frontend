@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { socket } from '../connection/socket';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectPlayer, setUsername } from '../features/player/playerSlice';
+import {
+  selectPlayer,
+  setPlayer,
+  setUsername,
+  resetPlayer,
+} from '../features/player/playerSlice';
 import Button from './UI/Button/Button';
 import InputText from './UI/Input/InputText';
 import Card from './UI/Card/Card';
@@ -57,6 +62,13 @@ const Login: React.FC = () => {
       socket.removeAllListeners();
     };
   });
+
+  //reset the stored state
+  useEffect(() => {
+    console.log(`Reset the state`);
+    window.localStorage.removeItem('skullAppPlayerData');
+    dispatch(resetPlayer());
+  }, []);
 
   return (
     <Card title="Login">

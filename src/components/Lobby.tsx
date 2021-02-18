@@ -24,6 +24,7 @@ import ButtonColorList from './UI/Button/ButtonColorList';
 import InputText from './UI/Input/InputText';
 import Card from './UI/Card/Card';
 import { ITakenColors } from '../util/types';
+import playerServices from '../features/player/playerServices';
 
 interface ParamTypes {
   gameID: string;
@@ -95,12 +96,15 @@ const Lobby: React.FC = () => {
   }, [player]);
 
   //* At first render, asks the server if the game trying to be rendered exists
+  //TODO : Try to persist the state through render
   useEffect(() => {
+    console.log(`Fetching data from the server`);
     const fetchGamesList = async () => {
       try {
         const response = await axios.get('/api/games/' + params.gameID);
         dispatch(setGame(response.data));
         const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
+        dispatch(setPlayer(playerServices.toPlayer(currentPlayer)));
       } catch (e) {
         // If it doesnt exist, redirect the user to home
         history.push('/');

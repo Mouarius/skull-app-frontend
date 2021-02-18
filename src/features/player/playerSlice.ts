@@ -41,6 +41,9 @@ const playerSlice = createSlice({
   name: 'player',
   initialState,
   reducers: {
+    resetPlayer: () => {
+      return initialState;
+    },
     createDeck: (state, action: PayloadAction<TeamColor>) => {
       state.deck = new Deck(action.payload);
     },
@@ -69,6 +72,7 @@ const playerSlice = createSlice({
 export const selectPlayer = (state: RootState): Player => state.player;
 
 export const {
+  resetPlayer,
   setPlayer,
   createDeck,
   setUsername,
