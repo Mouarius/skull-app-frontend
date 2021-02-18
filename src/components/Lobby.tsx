@@ -89,21 +89,18 @@ const Lobby: React.FC = () => {
     setStartButtonDisabled(!areAllPlayersReady());
   }, [game]);
 
+  useEffect(() => {
+    //Update the player data in localStorage each time it changes
+    window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player));
+  }, [player]);
+
   //* At first render, asks the server if the game trying to be rendered exists
   useEffect(() => {
     const fetchGamesList = async () => {
       try {
         const response = await axios.get('/api/games/' + params.gameID);
-        console.log(
-          '🚀 ~ file: Lobby.tsx ~ line 97 ~ fetchGamesList ~ response',
-          response
-        );
         dispatch(setGame(response.data));
         const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
-        console.log(
-          '🚀 ~ file: Lobby.tsx ~ line 99 ~ fetchGamesList ~ currentPlayer',
-          currentPlayer
-        );
       } catch (e) {
         // If it doesnt exist, redirect the user to home
         history.push('/');

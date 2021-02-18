@@ -46,7 +46,6 @@ const Login: React.FC = () => {
 
   const joinGame = (game: GameState) => {
     if (game) {
-      console.log('JSON.stringify(player) :>> ', JSON.stringify(player));
       window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player));
       history.push('/game/' + game.gameID);
     }
