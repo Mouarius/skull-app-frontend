@@ -31,7 +31,9 @@ const App: React.FC = () => {
           <Route path="/game/:gameID/board">
             <GameBoard />
           </Route>
-          <Route path="/game/:gameID">{displayLobby()}</Route>
+          <Route path="/game/:gameID">
+            <Lobby />
+          </Route>
           <Route path="/">
             <Login />
           </Route>

@@ -96,6 +96,10 @@ const Lobby: React.FC = () => {
     );
   };
 
+  const fetchGame = (gameID: string) => {
+    socket.emit('fetch_game/request', params.gameID);
+  };
+
   useEffect(() => {
     if (game.players) {
       setTakenColors(game.players.map((player) => player.color));
@@ -105,30 +109,39 @@ const Lobby: React.FC = () => {
 
   useEffect(() => {
     //Update the player data in localStorage each time it changes
-    window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player));
+    if (player.username) {
+      window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player));
+    }
   }, [player]);
 
   //* At first render, asks the server if the game trying to be rendered exists
   //TODO : Try to persist the state through render
   useEffect(() => {
     console.log(`Fetching data from the server`);
-    const fetchGamesList = async () => {
-      try {
-        const response = await axios.get('/api/games/' + params.gameID);
-        dispatch(setGame(response.data));
-        const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
-        dispatch(setPlayer(playerServices.toPlayerObject(currentPlayer)));
-      } catch (e) {
-        // If it doesnt exist, redirect the user to home
-        history.push('/');
-      }
-    };
-    fetchGamesList();
+    // const fetchGamesList = async () => {
+    //   try {
+    //     console.log(`Requesting the game : ${params.gameID}`);
+    //     const response = await axios.get('/api/games/' + params.gameID);
+    //     dispatch(setGame(response.data));
+    //     const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
+    //     dispatch(setPlayer(playerServices.toPlayerObject(currentPlayer)));
+    //   } catch (e) {
+    //     // If it doesnt exist, redirect the user to home
+    //     console.log(e);
+    //     history.push('/');
+    //   }
+    // };
+    fetchGame(params.gameID);
   }, []);
 
   // * Socket listeners
   // TODO Add enum types for listeners
   useEffect(() => {
+    socket.on('fetch_game/response', (game: GameState) => {
+      dispatch(setGame(game));
+      const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
+      dispatch(setPlayer(playerServices.toPlayerObject(currentPlayer)));
+    });
     socket.on('lobby/player_joined', (player: PlayerObject) => {
       console.log(`A user has logged in : ${player.username}`);
       dispatch(addPlayer(player));
