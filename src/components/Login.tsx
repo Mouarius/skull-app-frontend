@@ -21,7 +21,6 @@ const Login: React.FC = () => {
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setUsername(e.target.value));
-    console.log(player.username);
   };
 
   const handleCreateGameButton = () => {
@@ -42,7 +41,7 @@ const Login: React.FC = () => {
   const handleJoinGameButton = () => {
     if (inputGameID) {
       socket.emit('login/join_game/request', {
-        player: player,
+        playerObject: player,
         gameID: inputGameID,
       });
       console.log(`Join game requested`);
@@ -55,6 +54,7 @@ const Login: React.FC = () => {
       history.push('/game/' + game.gameID);
     }
   };
+
   useEffect(() => {
     socket.on('login/create_game/response', joinGame);
     socket.on('login/join_game/response', joinGame);

@@ -1,29 +1,29 @@
 import { isString } from 'lodash';
-import { Player } from './playerSlice';
+import { PlayerObject } from './playerSlice';
 
 //TODO add type validation for each parameter
 
-const toPlayer = (playerObject: any): Player => {
-  if (!playerObject) {
+const toPlayerObject = (object: any): PlayerObject => {
+  if (!object) {
     throw new Error('Missing player object.');
   }
-  if (isString(playerObject)) {
-    playerObject = JSON.parse(playerObject);
+  if (isString(object)) {
+    object = JSON.parse(object);
   }
   try {
     const player = {
-      username: playerObject.username,
-      color: playerObject.color,
-      deck: playerObject.deck,
-      isReady: playerObject.isReady,
-      hasWonOneRound: playerObject.hasWonOneRound,
-      hasWonTheGame: playerObject.hasWonTheGame,
-      id: playerObject.id,
-    } as Player;
+      username: object.username,
+      color: object.color,
+      deck: object.deck,
+      isReady: object.isReady,
+      hasWonOneRound: object.hasWonOneRound,
+      hasWonTheGame: object.hasWonTheGame,
+      id: object.id,
+    } as PlayerObject;
     return player;
   } catch (e) {
     return e;
   }
 };
 
-export default { toPlayer };
+export default { toPlayerObject };

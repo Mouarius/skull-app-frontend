@@ -6,7 +6,7 @@ import { socket } from '../connection/socket';
 import PlayersList from './Player/PlayersList';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Player,
+  PlayerObject,
   selectPlayer,
   setColor,
   setPlayer,
@@ -59,8 +59,21 @@ const Lobby: React.FC = () => {
 
     return allPlayersAreReady;
   };
+
+  const allPlayersChoseColor = (): boolean => {
+    const numberOfPlayers = game.players.length;
+    const numberOfPlayersColor = game.players.reduce((playerCount, current) => {
+      if (current.color) {
+        return playerCount + 1;
+      }
+      return playerCount;
+    }, 0);
+    return numberOfPlayersColor === numberOfPlayers;
+  };
+
   const handleStartButton = (): void => {
     console.log('Start clicked');
+
     socket.emit('lobby/start/request');
   };
 
@@ -104,7 +117,7 @@ const Lobby: React.FC = () => {
         const response = await axios.get('/api/games/' + params.gameID);
         dispatch(setGame(response.data));
         const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
-        dispatch(setPlayer(playerServices.toPlayer(currentPlayer)));
+        dispatch(setPlayer(playerServices.toPlayerObject(currentPlayer)));
       } catch (e) {
         // If it doesnt exist, redirect the user to home
         history.push('/');
@@ -116,24 +129,24 @@ const Lobby: React.FC = () => {
   // * Socket listeners
   // TODO Add enum types for listeners
   useEffect(() => {
-    socket.on('lobby/player_joined', (player: Player) => {
+    socket.on('lobby/player_joined', (player: PlayerObject) => {
       console.log(`A user has logged in : ${player.username}`);
       dispatch(addPlayer(player));
     });
     socket.on('lobby/game_updated', (game: GameState) => {
       dispatch(setGame(game));
     });
-    socket.on('lobby/change_color/response', (player: Player) => {
+    socket.on('lobby/change_color/response', (player: PlayerObject) => {
       console.log(`You have changed your color to ${player.color}`);
       dispatch(setColor(player.color));
     });
-    socket.on('lobby/player_color_update', (player: Player) => {
+    socket.on('lobby/player_color_update', (player: PlayerObject) => {
       console.log(
         `The player ${player.username} changed his color to ${player.color}`
       );
       dispatch(updatePlayer(player));
     });
-    socket.on('lobby/player_ready', (player: Player) => {
+    socket.on('lobby/player_ready', (player: PlayerObject) => {
       console.log(
         `The player ${player.username} is${player.isReady ? '' : ' not'} ready`
       );

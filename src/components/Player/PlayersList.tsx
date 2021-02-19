@@ -1,12 +1,12 @@
 import React from 'react';
-import { Player } from '../../features/player/playerSlice';
+import { PlayerObject } from '../../features/player/playerSlice';
 
 interface IPlayerListProps {
-  players: Player[];
+  players: PlayerObject[];
 }
 
 const PlayersList: React.FC<IPlayerListProps> = ({ players }) => {
-  const displayPlayerReadyClass = (player: Player): string => {
+  const displayPlayerReadyClass = (player: PlayerObject): string => {
     if (player.isReady) return 'underline';
     return '';
   };

@@ -3,14 +3,13 @@ import {
   BrowserRouter as Router,
   Route,
   Redirect,
-  RouteChildrenProps,
   Switch,
 } from 'react-router-dom';
 import Lobby from './components/Lobby';
 import Login from './components/Login';
 import { useSelector } from 'react-redux';
 import { selectPlayer } from './features/player/playerSlice';
-import { CSSTransition } from 'react-transition-group';
+import GameBoard from './components/GameBoard';
 
 const App: React.FC = () => {
   const player = useSelector(selectPlayer);
@@ -29,6 +28,9 @@ const App: React.FC = () => {
           Skull App_
         </h1>
         <Switch>
+          <Route path="/game/:gameID/board">
+            <GameBoard />
+          </Route>
           <Route path="/game/:gameID">{displayLobby()}</Route>
           <Route path="/">
             <Login />

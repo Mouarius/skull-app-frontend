@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { Player } from '../player/playerSlice';
+import { PlayerObject } from '../player/playerSlice';
 
 export interface GameState {
   gameID: string;
   ownerID: string;
-  players: Player[];
+  players: PlayerObject[];
 }
 
 const initialState: GameState = { gameID: '', ownerID: '', players: [] };

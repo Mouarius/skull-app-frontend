@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { TeamColor } from '../../util/types';
 import { RootState } from '../../app/store';
 
-export interface Player {
+export interface PlayerObject {
   color: TeamColor | null;
   username: string;
   deck: Deck | null;
@@ -14,7 +14,7 @@ export interface Player {
   id: string;
 }
 
-const initialState: Player = {
+const initialState: PlayerObject = {
   username: '',
   color: null,
   deck: null,
@@ -47,7 +47,7 @@ const playerSlice = createSlice({
     createDeck: (state, action: PayloadAction<TeamColor>) => {
       state.deck = new Deck(action.payload);
     },
-    setPlayer: (state, action: PayloadAction<Player>) => {
+    setPlayer: (state, action: PayloadAction<PlayerObject>) => {
       return action.payload;
     },
     setUsername: (state, action: PayloadAction<string>) => {
@@ -69,7 +69,7 @@ const playerSlice = createSlice({
   },
 });
 
-export const selectPlayer = (state: RootState): Player => state.player;
+export const selectPlayer = (state: RootState): PlayerObject => state.player;
 
 export const {
   resetPlayer,
