@@ -92,7 +92,7 @@ const Login: React.FC = () => {
       >
         get player data
       </Button>
-      <div className="flex flex-col p-2 mt-4 space-y-4 border-2 rounded-lg border-purple">
+      <div className="flex flex-col p-2 mt-4 space-y-4 border-2 rounded-lg border-primary">
         <InputText
           label="Game ID"
           id="game-id-input"

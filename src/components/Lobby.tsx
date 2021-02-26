@@ -12,7 +12,7 @@ import {
   setPlayer,
   toggleReady,
 } from '../features/player/playerSlice';
-import {
+import gameSlice, {
   addPlayer,
   GameState,
   selectGame,
@@ -60,6 +60,8 @@ const Lobby: React.FC = () => {
     return allPlayersAreReady;
   };
 
+  //TODO : Add condition to start the game that all players have chosen a color
+
   const allPlayersChoseColor = (): boolean => {
     const numberOfPlayers = game.players.length;
     const numberOfPlayersColor = game.players.reduce((playerCount, current) => {
@@ -73,8 +75,7 @@ const Lobby: React.FC = () => {
 
   const handleStartButton = (): void => {
     console.log('Start clicked');
-
-    socket.emit('lobby/start/request');
+    socket.emit('lobby/start_game/request', game.gameID);
   };
 
   const startOrReadyButton = (): ReactElement => {
@@ -97,7 +98,7 @@ const Lobby: React.FC = () => {
   };
 
   const fetchGame = (gameID: string) => {
-    socket.emit('fetch_game/request', params.gameID);
+    socket.emit('fetch_game/request', gameID);
   };
 
   useEffect(() => {
@@ -164,6 +165,11 @@ const Lobby: React.FC = () => {
         `The player ${player.username} is${player.isReady ? '' : ' not'} ready`
       );
       dispatch(updatePlayer(player));
+    });
+    socket.on('lobby/start_game/response', (game: GameState) => {
+      dispatch(setGame(game));
+      console.log('Starting the game');
+      history.push(`${history.location.pathname}/board`);
     });
 
     return () => {

@@ -47,33 +47,37 @@ module.exports = {
         red: {
           extraLight: colors.red[100],
           light: colors.red[400],
-          DEFAULT: colors.red[500],
+          DEFAULT: '#f94144',
           dark: colors.red[600],
         },
         orange: {
           light: colors.orange[400],
-          DEFAULT: colors.orange[500],
+          DEFAULT: '#f3722c',
           dark: colors.orange[600],
         },
         yellow: {
           light: colors.yellow[300],
-          DEFAULT: colors.yellow[400],
+          DEFAULT: '#f9c74f',
           dark: colors.yellow[500],
         },
         green: {
           light: colors.green[400],
-          DEFAULT: colors.green[500],
+          DEFAULT: '#90be6d',
           dark: colors.green[600],
         },
         blue: {
           light: colors.blue[400],
-          DEFAULT: colors.blue[500],
+          DEFAULT: '#277da1',
           dark: colors.blue[600],
         },
         purple: {
           light: colors.purple[400],
-          DEFAULT: colors.purple[500],
+          DEFAULT: '#577590',
           dark: colors.purple[600],
+        },
+        primary: {
+          dark: '#f58a08',
+          DEFAULT: '#f3722c',
         },
       },
     },

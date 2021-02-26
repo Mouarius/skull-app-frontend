@@ -26,6 +26,14 @@ const gameSlice = createSlice({
       );
       state.players = newPlayers;
     },
+    setCardVisible: (state, action) => {
+      const { playerID, cardID } = action.payload;
+      const player = state.players.find((p) => p.id === playerID);
+      const card = player?.deck?.cards?.find((c) => c.id === cardID);
+      if (card) {
+        card.isVisible = true;
+      }
+    },
 
     setGame: (state, action) => {
       return action.payload;
@@ -40,6 +48,7 @@ export const {
   removePlayer,
   updatePlayer,
   setGame,
+  setCardVisible,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

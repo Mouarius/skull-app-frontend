@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Deck from '../../model/deck';
 import { v4 as uuidv4 } from 'uuid';
-import { TeamColor } from '../../util/types';
+import { CardObject, TeamColor } from '../../util/types';
 import { RootState } from '../../app/store';
 
 export interface PlayerObject {
@@ -66,6 +66,9 @@ const playerSlice = createSlice({
         state.hasWonOneRound = true;
       }
     },
+    // setCardVisible : (state, action: PayloadAction<>) => {
+
+    // }
   },
 });
 

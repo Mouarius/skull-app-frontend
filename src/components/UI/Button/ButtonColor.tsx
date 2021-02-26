@@ -12,7 +12,6 @@ interface ButtonColorProps extends IButtonProps {
 
 const ButtonColor: React.FC<ButtonColorProps> = (props) => {
   const player = useSelector(selectPlayer);
-  const dispatch = useDispatch();
 
   const handleColorChange = (e: ChangeEvent<HTMLInputElement>) => {
     socket.emit('lobby/change_color/request', {

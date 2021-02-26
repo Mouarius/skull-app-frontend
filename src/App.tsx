@@ -9,7 +9,7 @@ import Lobby from './components/Lobby';
 import Login from './components/Login';
 import { useSelector } from 'react-redux';
 import { selectPlayer } from './features/player/playerSlice';
-import GameBoard from './components/GameBoard';
+import GameBoard from './components/GameBoard/GameBoard';
 
 const App: React.FC = () => {
   const player = useSelector(selectPlayer);
@@ -24,7 +24,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <div className="flex flex-col items-center pt-8">
-        <h1 className="mb-4 text-5xl font-bold text-transparent sm:text-6xl bg-gradient-to-r from-purple to-blue bg-clip-text font-display">
+        <h1 className="mb-4 text-5xl font-bold text-transparent sm:text-6xl bg-gradient-to-r from-red to-yellow bg-clip-text font-display">
           Skull App_
         </h1>
         <Switch>
@@ -45,6 +45,16 @@ const App: React.FC = () => {
         </Route> */}
 
         {/* <Notification type={NotificationType.INFO} message="An info message" /> */}
+        <div>
+          Icons made by{' '}
+          <a href="https://www.freepik.com" title="Freepik">
+            Freepik
+          </a>{' '}
+          from{' '}
+          <a href="https://www.flaticon.com/" title="Flaticon">
+            www.flaticon.com
+          </a>
+        </div>
       </div>
     </Router>
   );

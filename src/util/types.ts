@@ -24,3 +24,11 @@ export enum NotificationType {
   SUCCESS = 'success',
   INFO = 'info',
 }
+
+export interface CardObject {
+  id: string;
+  color: TeamColor;
+  type: CardType;
+  isInGame: boolean;
+  isVisible: boolean;
+}
