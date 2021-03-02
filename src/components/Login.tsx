@@ -85,13 +85,6 @@ const Login: React.FC = () => {
       >
         create a game
       </Button>
-      <Button
-        onClick={() => {
-          console.log(player.username);
-        }}
-      >
-        get player data
-      </Button>
       <div className="flex flex-col p-2 mt-4 space-y-4 border-2 rounded-lg border-primary">
         <InputText
           label="Game ID"

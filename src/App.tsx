@@ -9,7 +9,7 @@ import Lobby from './components/Lobby';
 import Login from './components/Login';
 import { useSelector } from 'react-redux';
 import { selectPlayer } from './features/player/playerSlice';
-import GameBoard from './components/GameBoard/GameBoard';
+import GameArea from './components/GameArea';
 
 const App: React.FC = () => {
   const player = useSelector(selectPlayer);
@@ -29,7 +29,7 @@ const App: React.FC = () => {
         </h1>
         <Switch>
           <Route path="/game/:gameID/board">
-            <GameBoard />
+            <GameArea />
           </Route>
           <Route path="/game/:gameID">
             <Lobby />
@@ -45,7 +45,7 @@ const App: React.FC = () => {
         </Route> */}
 
         {/* <Notification type={NotificationType.INFO} message="An info message" /> */}
-        <div>
+        {/* <div>
           Icons made by{' '}
           <a href="https://www.freepik.com" title="Freepik">
             Freepik
@@ -54,7 +54,7 @@ const App: React.FC = () => {
           <a href="https://www.flaticon.com/" title="Flaticon">
             www.flaticon.com
           </a>
-        </div>
+        </div> */}
       </div>
     </Router>
   );

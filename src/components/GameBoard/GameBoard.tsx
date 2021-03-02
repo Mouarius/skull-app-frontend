@@ -2,9 +2,19 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 import { socket } from '../../connection/socket';
-import { GameState, selectGame, setGame } from '../../features/game/gameSlice';
+import {
+  GameState,
+  selectGame,
+  setGame,
+  updatePlayer,
+} from '../../features/game/gameSlice';
 import playerServices from '../../features/player/playerServices';
-import { selectPlayer, setPlayer } from '../../features/player/playerSlice';
+import {
+  PlayerObject,
+  selectPlayer,
+  setPlayer,
+} from '../../features/player/playerSlice';
+import { CardObject } from '../../util/types';
 import GameCard from './GameCard';
 
 interface IGameBoardParams {
@@ -32,30 +42,38 @@ const GameBoard: React.FC = () => {
       const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
       dispatch(setPlayer(playerServices.toPlayerObject(currentPlayer)));
     });
+    socket.on('card/card_played', (player: PlayerObject) => {
+      dispatch(updatePlayer(player));
+    });
     return () => {
       socket.removeAllListeners();
     }; // Cleanup fix
   }, []);
 
   return (
-    <div className="w-full p-8 bg-white border-2 border-solid shadow-md white card border-purple">
+    <div className="w-full p-8 bg-white border-2 border-solid shadow-md game-board white card border-purple">
       <div className="flex flex-row flex-wrap items-center justify-center">
         {game.players.map((p) => {
           if (p.deck?.cards) {
             return p.deck.cards.map((c) => {
-              // if (c.isInGame) {
-              return (
-                <div
-                  key={player.id}
-                  className="relative flex flex-col items-center justify-end m-1 overflow-hidden align-bottom shadow w-28 h-28 sm:w-32 sm:h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 bg-content-100 rounded-2xl"
-                >
-                  <GameCard color={p.color} isVisible={c.isVisible} card={c} />
-                  <span className="mb-1 font-medium text-content-300">
-                    {p.username}
-                  </span>
-                </div>
-              );
-              // }
+              if (c.isInGame) {
+                return (
+                  <div
+                    key={player.id}
+                    className="relative flex flex-col items-center justify-end m-1 overflow-hidden align-bottom shadow w-28 h-28 sm:w-32 sm:h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 bg-content-100 rounded-2xl"
+                  >
+                    <GameCard
+                      playerID={p.id}
+                      color={p.color}
+                      isVisible={c.isVisible}
+                      card={c}
+                    />
+                    <span className="mb-1 font-medium text-content-300">
+                      {p.username}
+                    </span>
+                  </div>
+                );
+              }
             });
           }
         })}

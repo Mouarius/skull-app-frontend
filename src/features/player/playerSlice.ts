@@ -66,9 +66,6 @@ const playerSlice = createSlice({
         state.hasWonOneRound = true;
       }
     },
-    // setCardVisible : (state, action: PayloadAction<>) => {
-
-    // }
   },
 });
 

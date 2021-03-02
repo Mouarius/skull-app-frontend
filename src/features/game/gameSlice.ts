@@ -34,7 +34,6 @@ const gameSlice = createSlice({
         card.isVisible = true;
       }
     },
-
     setGame: (state, action) => {
       return action.payload;
     },

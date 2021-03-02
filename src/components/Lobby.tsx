@@ -82,7 +82,7 @@ const Lobby: React.FC = () => {
     if (player.id === game.ownerID) {
       return (
         <Button
-          className="w-full"
+          className="w-full start-button"
           disabled={startButtonDisabled}
           onClick={handleStartButton}
         >
@@ -91,7 +91,7 @@ const Lobby: React.FC = () => {
       );
     }
     return (
-      <Button className="w-full" onClick={handleReadyButton}>
+      <Button className="w-full ready-button" onClick={handleReadyButton}>
         Ready
       </Button>
     );

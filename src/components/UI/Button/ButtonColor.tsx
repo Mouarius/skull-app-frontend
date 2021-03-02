@@ -46,7 +46,7 @@ const ButtonColor: React.FC<ButtonColorProps> = (props) => {
           taken by : {findPlayerRelatedToColor(props.color)}
         </span> */}
         <span
-          className={`radio-mark bg-${
+          className={`color-button-${props.color} radio-mark bg-${
             props.color
           } box-border flex h-14 w-14 sm:w-9 sm:h-9 rounded-full mx-1 border-solid transition-all shadow-sm border-gray-200 hover:border-10 ${isChecked()} ${isTaken()}`}
         ></span>
