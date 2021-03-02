@@ -31,7 +31,15 @@ describe('SKULL_APP TESTS', () => {
       });
     });
   });
-  describe('GAME CREATION PROCESS', () => {
-    it('Two users connect to the app', () => {});
+  describe.only('TEST GAME ACTIONS', () => {
+    it('Can join the test game', () => {
+      cy.get('#username-input').type('mouarius');
+      cy.get('#game-id-input').type('test');
+      cy.get('.join-game-button').click();
+      cy.contains('Lobby');
+      cy.get('.color-button-blue').click();
+      cy.get('.start-button').click();
+      cy.get('.game-board');
+    });
   });
 });
