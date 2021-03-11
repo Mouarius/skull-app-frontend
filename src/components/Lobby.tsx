@@ -166,8 +166,7 @@ const Lobby: React.FC = () => {
       );
       dispatch(updatePlayer(player));
     });
-    socket.on('lobby/start_game/response', (game: GameState) => {
-      dispatch(setGame(game));
+    socket.on('lobby/start_game/response', () => {
       console.log('Starting the game');
       history.push(`${history.location.pathname}/board`);
     });
