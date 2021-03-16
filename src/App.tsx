@@ -10,6 +10,7 @@ import Login from './components/Login';
 import { useSelector } from 'react-redux';
 import { selectPlayer } from './features/player/playerSlice';
 import GameArea from './components/GameArea';
+import AllPlayersList from './components/AllPlayersList';
 
 const App: React.FC = () => {
   const player = useSelector(selectPlayer);
@@ -38,6 +39,8 @@ const App: React.FC = () => {
             <Login />
           </Route>
         </Switch>
+        <AllPlayersList />
+
         {/* <Route exact path="/">
           {(props) => {
             return <Redirect to="/login" />

@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { socket } from '../connection/socket';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectPlayer,
-  setPlayer,
   setUsername,
   resetPlayer,
 } from '../features/player/playerSlice';
 import Button from './UI/Button/Button';
 import InputText from './UI/Input/InputText';
 import Card from './UI/Card/Card';
-import { GameState } from '../features/game/gameSlice';
+import { useFirestore } from 'reactfire';
 
 const Login: React.FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const player = useSelector(selectPlayer);
   const [inputGameID, setInputGameID] = useState('');
+  const currentPlayerRef = useFirestore().collection('players').doc();
+  const gamesRef = useFirestore().collection('games');
+  const currentGameRef = useFirestore().collection('games').doc();
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setUsername(e.target.value));
@@ -28,7 +29,18 @@ const Login: React.FC = () => {
       // if user has defined his username
       // First, create a new game request to the server, to create a room in socket.io
       // Then get this room id, and make the player to join it
-      socket.emit('login/create_game/request', player);
+      currentPlayerRef.set({
+        username: player.username,
+      });
+
+      currentGameRef
+        .set({
+          ownerID: currentPlayerRef.id,
+        })
+        .then(() => {
+          joinGame(currentGameRef.id);
+        });
+
       // We must wait for the response to redirect the player to the new game and new room
     }
     //TODO : Display notification to ask the user to give a username
@@ -40,28 +52,28 @@ const Login: React.FC = () => {
 
   const handleJoinGameButton = () => {
     if (inputGameID) {
-      socket.emit('login/join_game/request', {
-        playerObject: player,
-        gameID: inputGameID,
-      });
-      console.log(`Join game requested`);
+      gamesRef
+        .doc(inputGameID)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            joinGame(doc.id);
+          } else {
+            console.log('No games found with this id !');
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 
-  const joinGame = (game: GameState) => {
-    if (game) {
+  const joinGame = (gameID: string) => {
+    if (gameID) {
       window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player));
-      history.push('/game/' + game.gameID);
+      history.push('/game/' + gameID);
     }
   };
-
-  useEffect(() => {
-    socket.on('login/create_game/response', joinGame);
-    socket.on('login/join_game/response', joinGame);
-    return () => {
-      socket.removeAllListeners();
-    };
-  });
 
   //reset the stored state
   useEffect(() => {
