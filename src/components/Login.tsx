@@ -5,6 +5,7 @@ import {
   selectPlayer,
   setUsername,
   resetPlayer,
+  setID,
 } from '../features/player/playerSlice';
 import Button from './UI/Button/Button';
 import InputText from './UI/Input/InputText';
@@ -26,12 +27,10 @@ const Login: React.FC = () => {
 
   const handleCreateGameButton = () => {
     if (player.username !== '') {
-      // if user has defined his username
-      // First, create a new game request to the server, to create a room in socket.io
-      // Then get this room id, and make the player to join it
       currentPlayerRef.set({
         username: player.username,
       });
+      dispatch(setID(currentPlayerRef.id));
 
       currentGameRef
         .set({
@@ -40,8 +39,6 @@ const Login: React.FC = () => {
         .then(() => {
           joinGame(currentGameRef.id);
         });
-
-      // We must wait for the response to redirect the player to the new game and new room
     }
     //TODO : Display notification to ask the user to give a username
   };

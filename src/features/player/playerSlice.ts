@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Deck from '../../model/deck';
-import { v4 as uuidv4 } from 'uuid';
-import { CardObject, TeamColor } from '../../util/types';
+import { TeamColor } from '../../util/types';
 import { RootState } from '../../app/store';
 
 export interface PlayerObject {
@@ -21,7 +20,7 @@ const initialState: PlayerObject = {
   isReady: false,
   hasWonOneRound: false,
   hasWonTheGame: false,
-  id: uuidv4(),
+  id: '',
 };
 
 // export const setPlayerColorAndUpdate = (color: TeamColor) => (
@@ -59,6 +58,9 @@ const playerSlice = createSlice({
     toggleReady: (state) => {
       return { ...state, isReady: !state.isReady };
     },
+    setID: (state, action: PayloadAction<string>) => {
+      return { ...state, id: action.payload };
+    },
     win: (state) => {
       if (state.hasWonOneRound) {
         state.hasWonTheGame = true;
@@ -78,6 +80,7 @@ export const {
   setUsername,
   setColor,
   toggleReady,
+  setID,
   win,
 } = playerSlice.actions;
 
