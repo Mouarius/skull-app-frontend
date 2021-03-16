@@ -10,7 +10,6 @@ import Login from './components/Login';
 import { useSelector } from 'react-redux';
 import { selectPlayer } from './features/player/playerSlice';
 import GameArea from './components/GameArea';
-import AllPlayersList from './components/debug/AllPlayersList';
 import { useFirestore } from 'reactfire';
 import DatabaseCollectionList from './components/debug/DatabaseCollectionList';
 

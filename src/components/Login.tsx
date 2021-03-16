@@ -11,40 +11,44 @@ import Button from './UI/Button/Button';
 import InputText from './UI/Input/InputText';
 import Card from './UI/Card/Card';
 import { useFirestore } from 'reactfire';
+import { addPlayer } from '../features/game/gameSlice';
 
 const Login: React.FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const player = useSelector(selectPlayer);
   const [inputGameID, setInputGameID] = useState('');
-  const currentPlayerRef = useFirestore().collection('players').doc();
+
+  //*FIRESTORE REFS
+  const playersRef = useFirestore().collection('players');
+  const currentPlayerRef = playersRef.doc();
   const gamesRef = useFirestore().collection('games');
   const currentGameRef = useFirestore().collection('games').doc();
 
+  //* CHANGE HANDLERS
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setUsername(e.target.value));
   };
-
-  const handleCreateGameButton = () => {
-    if (player.username !== '') {
-      currentPlayerRef.set({
-        username: player.username,
-      });
-      dispatch(setID(currentPlayerRef.id));
-
-      currentGameRef
-        .set({
-          ownerID: currentPlayerRef.id,
-        })
-        .then(() => {
-          joinGame(currentGameRef.id);
-        });
-    }
-    //TODO : Display notification to ask the user to give a username
-  };
-
   const handleInputGameIDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputGameID(e.target.value);
+  };
+
+  //* ACTION HANDLERS
+  const handleCreateGameButton = () => {
+    if (player.username !== '') {
+      currentPlayerRef.set({ ...player }).then(() => {
+        dispatch(setID(currentPlayerRef.id));
+      });
+      currentPlayerRef.get().then((q) => console.log(q.data()));
+      currentGameRef
+        .collection('players')
+        .add({ ...player })
+        .then((doc) => {
+          currentGameRef.set({ ownerID: doc.id });
+        });
+      joinGame(currentGameRef.id);
+    }
+    //TODO : Display notification to ask the user to give a username
   };
 
   const handleJoinGameButton = () => {
@@ -54,6 +58,7 @@ const Login: React.FC = () => {
         .get()
         .then((doc) => {
           if (doc.exists) {
+            currentGameRef.collection('games').add({ ...player });
             joinGame(doc.id);
           } else {
             console.log('No games found with this id !');
@@ -67,6 +72,7 @@ const Login: React.FC = () => {
 
   const joinGame = (gameID: string) => {
     if (gameID) {
+      dispatch(addPlayer(player));
       window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player));
       history.push('/game/' + gameID);
     }
