@@ -10,10 +10,14 @@ import Login from './components/Login';
 import { useSelector } from 'react-redux';
 import { selectPlayer } from './features/player/playerSlice';
 import GameArea from './components/GameArea';
-import AllPlayersList from './components/AllPlayersList';
+import AllPlayersList from './components/debug/AllPlayersList';
+import { useFirestore } from 'reactfire';
+import DatabaseCollectionList from './components/debug/DatabaseCollectionList';
 
 const App: React.FC = () => {
   const player = useSelector(selectPlayer);
+  const gamesRef = useFirestore().collection('games');
+  const playersRef = useFirestore().collection('players');
 
   const displayLobby = () => {
     if (!player.username) {
@@ -39,7 +43,8 @@ const App: React.FC = () => {
             <Login />
           </Route>
         </Switch>
-        <AllPlayersList />
+        <DatabaseCollectionList name="games" collectionRef={gamesRef} />
+        <DatabaseCollectionList name="players" collectionRef={playersRef} />
 
         {/* <Route exact path="/">
           {(props) => {
