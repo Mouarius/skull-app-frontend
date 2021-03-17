@@ -4,7 +4,7 @@ import { CardObject } from '../../util/types';
 import { PlayerObject } from '../player/playerSlice';
 
 export interface GameState {
-  gameID: string;
+  id: string;
   ownerID: string;
   players: PlayerObject[];
 }
@@ -14,7 +14,7 @@ interface ISetCardVisiblePayload {
   cardID: string;
 }
 
-const initialState: GameState = { gameID: '', ownerID: '', players: [] };
+const initialState: GameState = { id: '', ownerID: '', players: [] };
 
 const gameSlice = createSlice({
   name: 'game',
@@ -25,6 +25,9 @@ const gameSlice = createSlice({
     },
     removePlayer: (state, action) => {
       state.players.filter((player) => player.id !== action.payload.id);
+    },
+    setPlayers: (state, action) => {
+      state.players = action.payload;
     },
     updatePlayer: (state, action) => {
       const newPlayers = state.players.map((player) =>
@@ -54,6 +57,9 @@ const gameSlice = createSlice({
     setGame: (state, action) => {
       return action.payload;
     },
+    updateGame: (state, action) => {
+      return { ...state, ...action.payload };
+    },
   },
 });
 
@@ -66,6 +72,8 @@ export const {
   setGame,
   setCardVisible,
   playCard,
+  setPlayers,
+  updateGame,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

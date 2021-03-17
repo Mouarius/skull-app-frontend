@@ -31,7 +31,7 @@ describe('SKULL_APP TESTS', () => {
       });
     });
   });
-  describe.only('TEST GAME ACTIONS', () => {
+  describe('TEST GAME ACTIONS', () => {
     it('Can join the test game', () => {
       cy.get('#username-input').type('mouarius');
       cy.get('#game-id-input').type('test');

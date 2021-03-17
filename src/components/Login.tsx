@@ -36,14 +36,11 @@ const Login: React.FC = () => {
   //* ACTION HANDLERS
   const handleCreateGameButton = () => {
     if (player.username !== '') {
-      currentPlayerRef.set({ ...player }).then(() => {
-        dispatch(setID(currentPlayerRef.id));
-      });
-      currentPlayerRef.get().then((q) => console.log(q.data()));
       currentGameRef
         .collection('players')
         .add({ ...player })
         .then((doc) => {
+          dispatch(setID(doc.id));
           currentGameRef.set({ ownerID: doc.id });
         });
       joinGame(currentGameRef.id);
