@@ -55,7 +55,10 @@ const Login: React.FC = () => {
         .get()
         .then((doc) => {
           if (doc.exists) {
-            currentGameRef.collection('games').add({ ...player });
+            gamesRef
+              .doc(doc.id)
+              .collection('players')
+              .add({ ...player });
             joinGame(doc.id);
           } else {
             console.log('No games found with this id !');
