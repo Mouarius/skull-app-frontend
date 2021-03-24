@@ -1,7 +1,5 @@
-import { render, screen } from '@testing-library/react';
 import Card from './model/card';
 import Deck from './model/deck';
-import { cardType, teamColor } from './model/common';
 import { CardType, TeamColor } from './util/types';
 
 describe('CARDS AND DECKS', () => {

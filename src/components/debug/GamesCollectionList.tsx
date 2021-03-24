@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import 'firebase/firestore';
 import firebase from 'firebase';
-import { useFirestoreCollectionData } from 'reactfire';
+import { useFirestore, useFirestoreCollectionData } from 'reactfire';
 
 interface IProps {
-  collectionRef: firebase.firestore.CollectionReference;
   name: string;
 }
 
-const DatabaseCollectionList: React.FC<IProps> = (props) => {
+const GamesCollectionList: React.FC<IProps> = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [elements, setElements] = useState<any[]>();
-  const { status, data } = useFirestoreCollectionData(props.collectionRef, {
+  const gamesRef = useFirestore().collection('games');
+  const { status, data } = useFirestoreCollectionData(gamesRef, {
     idField: 'id',
   });
 
@@ -35,7 +35,14 @@ const DatabaseCollectionList: React.FC<IProps> = (props) => {
             <button
               onClick={() => {
                 console.log(`Removing element with id : ${elem.id}`);
-                props.collectionRef.doc(elem.id).delete();
+                gamesRef
+                  .doc(elem.id)
+                  .collection('players')
+                  .get()
+                  .then((snapshot) => {
+                    snapshot.docs.forEach((doc) => doc.ref.delete);
+                  });
+                gamesRef.doc(elem.id).delete();
               }}
             >
               remove
@@ -47,4 +54,4 @@ const DatabaseCollectionList: React.FC<IProps> = (props) => {
   );
 };
 
-export default DatabaseCollectionList;
+export default GamesCollectionList;

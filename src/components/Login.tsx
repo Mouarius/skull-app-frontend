@@ -20,8 +20,6 @@ const Login: React.FC = () => {
   const [inputGameID, setInputGameID] = useState('');
 
   //*FIRESTORE REFS
-  const playersRef = useFirestore().collection('players');
-  const currentPlayerRef = playersRef.doc();
   const gamesRef = useFirestore().collection('games');
   const currentGameRef = useFirestore().collection('games').doc();
 
@@ -52,17 +50,11 @@ const Login: React.FC = () => {
     if (inputGameID) {
       gamesRef
         .doc(inputGameID)
-        .get()
+        .collection('players')
+        .add({ ...player })
         .then((doc) => {
-          if (doc.exists) {
-            gamesRef
-              .doc(doc.id)
-              .collection('players')
-              .add({ ...player });
-            joinGame(doc.id);
-          } else {
-            console.log('No games found with this id !');
-          }
+          dispatch(setID(doc.id));
+          joinGame(inputGameID);
         })
         .catch((error) => {
           console.error(error);

@@ -1,3 +1,5 @@
+import Deck from '../model/deck';
+
 export enum TeamColor {
   RED = 'red',
   ORANGE = 'orange',
@@ -17,12 +19,22 @@ export interface BaseComponentProps {
   className?: string;
 }
 
-export type ITakenColors = (TeamColor | null)[];
+export type ITakenColors = (string | null | TeamColor)[][];
 
 export enum NotificationType {
   ERROR = 'error',
   SUCCESS = 'success',
   INFO = 'info',
+}
+
+export interface PlayerObject {
+  color: TeamColor | null;
+  username: string;
+  deck: Deck | null;
+  isReady: boolean;
+  hasWonOneRound: boolean;
+  hasWonTheGame: boolean;
+  id: string;
 }
 
 export interface CardObject {

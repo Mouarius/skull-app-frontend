@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -11,12 +11,12 @@ import { useSelector } from 'react-redux';
 import { selectPlayer } from './features/player/playerSlice';
 import GameArea from './components/GameArea';
 import { useFirestore } from 'reactfire';
-import DatabaseCollectionList from './components/debug/DatabaseCollectionList';
+import DatabaseCollectionList from './components/debug/GamesCollectionList';
+import GamesCollectionList from './components/debug/GamesCollectionList';
 
 const App: React.FC = () => {
   const player = useSelector(selectPlayer);
   const gamesRef = useFirestore().collection('games');
-  const playersRef = useFirestore().collection('players');
 
   const displayLobby = () => {
     if (!player.username) {
@@ -24,6 +24,22 @@ const App: React.FC = () => {
     }
     return <Lobby />;
   };
+
+  useEffect(() => {
+    return () => {
+      //remove a specific player from game (disconnect)
+      if (player.id) {
+        gamesRef.get().then((snapshot) => {
+          snapshot.forEach((doc) => {
+            let loggedInPlayer = gamesRef
+              .doc(doc.id)
+              .collection('players')
+              .doc(player.id);
+          });
+        });
+      }
+    };
+  }, []);
 
   return (
     <Router>
@@ -42,8 +58,7 @@ const App: React.FC = () => {
             <Login />
           </Route>
         </Switch>
-        <DatabaseCollectionList name="games" collectionRef={gamesRef} />
-        <DatabaseCollectionList name="players" collectionRef={playersRef} />
+        <GamesCollectionList name="Games" />
 
         {/* <Route exact path="/">
           {(props) => {

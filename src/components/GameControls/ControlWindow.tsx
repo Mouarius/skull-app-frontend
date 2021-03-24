@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { socket } from '../../connection/socket';
+// import { socket } from '../../connection/socket';
 import { selectPlayer } from '../../features/player/playerSlice';
 import { CardType } from '../../util/types';
 import Button from '../UI/Button/Button';
@@ -13,17 +13,17 @@ const ControlWindow: React.FC = () => {
 
   const handleFlowerButton = () => {
     console.log('FLOWER CLICKED !');
-    socket.emit('card/play_card', {
-      cardType: CardType.FLOWER,
-      playerID: player.id,
-    });
+    // socket.emit('card/play_card', {
+    //   cardType: CardType.FLOWER,
+    //   playerID: player.id,
+    // });
   };
   const handleSkullButton = () => {
     console.log('SKULL CLICKED !');
-    socket.emit('card/play_card', {
-      cardType: CardType.SKULL,
-      playerID: player.id,
-    });
+    // socket.emit('card/play_card', {
+    //   cardType: CardType.SKULL,
+    //   playerID: player.id,
+    // });
   };
   const handleBetButton = () => {
     console.log('BET CLICKED !');

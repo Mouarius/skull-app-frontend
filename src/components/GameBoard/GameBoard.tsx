@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
-import { socket } from '../../connection/socket';
+// import { socket } from '../../connection/socket';
 import {
   GameState,
   playCard,
@@ -30,7 +30,7 @@ const GameBoard: React.FC = () => {
   const player = useSelector(selectPlayer);
 
   const fetchGame = (gameID: string) => {
-    socket.emit('fetch_game/request', gameID);
+    //socket.emit('fetch_game/request', gameID);
   };
 
   useEffect(() => {
@@ -39,20 +39,18 @@ const GameBoard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    socket.on('fetch_game/response', (game: GameState) => {
-      dispatch(setGame(game));
-      const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
-      dispatch(setPlayer(playerServices.toPlayerObject(currentPlayer)));
-    });
-
-    socket.on('card/card_played', (card: CardObject) => {
-      console.log(`Card played : ${card}`);
-      dispatch(playCard(card));
-    });
-
-    return () => {
-      socket.removeAllListeners();
-    }; // Cleanup fix
+    // socket.on('fetch_game/response', (game: GameState) => {
+    //   dispatch(setGame(game));
+    //   const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
+    //   dispatch(setPlayer(playerServices.toPlayerObject(currentPlayer)));
+    // });
+    // socket.on('card/card_played', (card: CardObject) => {
+    //   console.log(`Card played : ${card}`);
+    //   dispatch(playCard(card));
+    // });
+    // return () => {
+    //   socket.removeAllListeners();
+    // }; // Cleanup fix
   }, []);
 
   return (

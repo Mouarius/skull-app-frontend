@@ -1,4 +1,5 @@
-import React, { ChangeEvent } from 'react';
+import firebase from 'firebase';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useFirestore } from 'reactfire';
 import { selectGame } from '../../../features/game/gameSlice';
@@ -15,11 +16,19 @@ const ButtonColor: React.FC<ButtonColorProps> = (props) => {
   const player = useSelector(selectPlayer);
   const game = useSelector(selectGame);
   const gamesRef = useFirestore().collection('games');
+  let playersInGameRef: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>;
+  if (game.id) {
+    playersInGameRef = gamesRef.doc(game.id).collection('players');
+  }
+  const [playerWithThatColor, setPlayerWithThatColor] = useState<string | null>(
+    ''
+  );
 
   const handleColorChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const playersInGameRef = gamesRef.doc(game.id).collection('players');
     console.log(`Handle color change to : ${props.color}`);
-    playersInGameRef.doc(player.id).update({ color: e.target.value });
+    if (player.id) {
+      playersInGameRef.doc(player.id).update({ color: e.target.value });
+    }
   };
 
   const isChecked = (): string => {
@@ -31,25 +40,40 @@ const ButtonColor: React.FC<ButtonColorProps> = (props) => {
 
   const isTaken = (): string => {
     const colorIsTaken = props.takenColors.find(
-      (color) => color === props.color
+      (colorMatch) => colorMatch[1] === props.color
     );
-    if (!!colorIsTaken && colorIsTaken !== player.color) {
+    if (!!colorIsTaken && colorIsTaken[1] !== player.color) {
       return 'taken';
     }
     return '';
   };
 
+  useEffect(() => {
+    const thisColorMatch = props.takenColors.find(
+      (colorMatch) => colorMatch[1] === props.color
+    );
+    if (thisColorMatch) {
+      setPlayerWithThatColor(thisColorMatch[0]);
+    } else {
+      setPlayerWithThatColor(null);
+    }
+  }, [props.takenColors]);
+
   return (
     <li className="ButtonColor">
-      <label htmlFor={`${props.color}-radio`} className="cursor-pointer">
-        {/* <span className="taken-by-label">
-          taken by : {findPlayerRelatedToColor(props.color)}
-        </span> */}
+      <label
+        htmlFor={`${props.color}-radio`}
+        className="relative cursor-pointer"
+      >
         <span
           className={`color-button-${props.color} radio-mark bg-${
             props.color
-          } box-border flex h-14 w-14 sm:w-9 sm:h-9 rounded-full mx-1 border-solid transition-all shadow-sm border-gray-200 hover:border-10 ${isChecked()} ${isTaken()}`}
-        ></span>
+          } box-border justify-center items-center align-baseline flex h-14 w-14 sm:w-9 sm:h-9 rounded-full mx-1 border-solid transition-all shadow-sm border-gray-200 hover:border-10 ${isChecked()} ${isTaken()}`}
+        >
+          <span className="relative text-gray-200">
+            {playerWithThatColor?.charAt(0).toUpperCase()}
+          </span>
+        </span>
         <input
           type="radio"
           id={`${props.color}-radio`}
@@ -58,7 +82,9 @@ const ButtonColor: React.FC<ButtonColorProps> = (props) => {
           onChange={handleColorChange}
           checked={props.color === player.color}
           disabled={
-            props.takenColors.find((color) => color === props.color)
+            props.takenColors.find(
+              (colorMatch) => colorMatch[1] === props.color
+            )
               ? true
               : false
           }

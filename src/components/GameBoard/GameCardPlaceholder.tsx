@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { socket } from '../../connection/socket';
+// import { socket } from '../../connection/socket';
 import { playCard, updatePlayer } from '../../features/game/gameSlice';
 import { PlayerObject } from '../../features/player/playerSlice';
 import { CardObject } from '../../util/types';
@@ -16,19 +16,19 @@ const GameCardPlaceholder: React.FC<IProps> = (props) => {
 
   useEffect(() => {
     //TODO : move the listener to higher component, because it is listened 5 times
-    socket.on('card/card_played', (card: CardObject) => {
-      console.log(`Card played : ${card}`);
-      dispatch(playCard(card));
-      if (card.color === props.player.color) {
-        console.log('card :>> ', card);
-        const newCardsPlayed = [...cardsPlayed, card];
-        console.log('newCardsPlayed :>> ', newCardsPlayed);
-        setCardsPlayed(newCardsPlayed);
-      }
-    });
-    return () => {
-      socket.removeAllListeners();
-    };
+    // socket.on('card/card_played', (card: CardObject) => {
+    //   console.log(`Card played : ${card}`);
+    //   dispatch(playCard(card));
+    //   if (card.color === props.player.color) {
+    //     console.log('card :>> ', card);
+    //     const newCardsPlayed = [...cardsPlayed, card];
+    //     console.log('newCardsPlayed :>> ', newCardsPlayed);
+    //     setCardsPlayed(newCardsPlayed);
+    //   }
+    // });
+    // return () => {
+    //   socket.removeAllListeners();
+    // };
   }, []);
 
   const displayCards = () => {

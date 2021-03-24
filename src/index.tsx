@@ -17,6 +17,8 @@ const firebaseConfig = {
   appId: '1:613024563494:web:264b463f59adf0f58cc1e7',
 };
 
+console.log(process.env.NODE_ENV);
+
 ReactDOM.render(
   <FirebaseAppProvider firebaseConfig={firebaseConfig}>
     <Provider store={store}>

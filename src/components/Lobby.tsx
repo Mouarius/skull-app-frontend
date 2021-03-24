@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { socket } from '../connection/socket';
 import PlayersList from './Player/PlayersList';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -15,6 +14,7 @@ import ButtonColorList from './UI/Button/ButtonColorList';
 import InputText from './UI/Input/InputText';
 import Card from './UI/Card/Card';
 import { ITakenColors } from '../util/types';
+import playerServices from '../features/player/playerServices';
 import {
   useFirestore,
   useFirestoreCollectionData,
@@ -41,12 +41,9 @@ const Lobby: React.FC = () => {
     idField: 'id',
   });
 
-  const { data: playersInGameData } = useFirestoreCollectionData(
-    playersInGameRef,
-    {
-      idField: 'id',
-    }
-  );
+  const {
+    data: playersInGameData,
+  } = useFirestoreCollectionData(playersInGameRef, { idField: 'id' });
 
   //* LISTEN TO DATABASE CHANGES
   useEffect(() => {
@@ -55,6 +52,11 @@ const Lobby: React.FC = () => {
     }
     if (playersInGameData) {
       dispatch(setPlayers(playersInGameData));
+      playersInGameData.forEach((p) => {
+        if (p.id === player.id) {
+          dispatch(setPlayer(playerServices.toPlayerObject(p)));
+        }
+      });
     }
   }, [playersInGameData, gameData]);
 
@@ -65,6 +67,20 @@ const Lobby: React.FC = () => {
       dispatch(setPlayer(JSON.parse(localPlayerData)));
     }
   }, []);
+
+  useEffect(() => {
+    if (game.players) {
+      setTakenColors(
+        game.players.map((player) => {
+          return [player.username, player.color];
+        })
+      );
+    }
+    setStartButtonDisabled(!areAllPlayersReady());
+    if (player.username) {
+      window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player));
+    }
+  }, [game, player]);
 
   const copyToClipboard = (): void => {
     navigator.clipboard.writeText(game.id);
@@ -105,7 +121,7 @@ const Lobby: React.FC = () => {
 
   const handleStartButton = (): void => {
     console.log('Start clicked');
-    socket.emit('lobby/start_game/request', game.id);
+    // socket.emit('lobby/start_game/request', game.id);
   };
 
   const startOrReadyButton = (): ReactElement => {
@@ -126,20 +142,6 @@ const Lobby: React.FC = () => {
       </Button>
     );
   };
-
-  useEffect(() => {
-    if (game.players) {
-      setTakenColors(game.players.map((player) => player.color));
-    }
-    setStartButtonDisabled(!areAllPlayersReady());
-  }, [game]);
-
-  useEffect(() => {
-    //Update the player data in localStorage each time it changes
-    if (player.username) {
-      window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player));
-    }
-  }, [player]);
 
   // * Socket listeners
   // TODO Add enum types for listeners

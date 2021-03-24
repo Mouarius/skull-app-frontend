@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { socket } from '../../connection/socket';
+// import { socket } from '../../connection/socket';
 import { setCardVisible } from '../../features/game/gameSlice';
 import { CardObject, CardType, TeamColor } from '../../util/types';
 import GameCardLogo from './GameCardLogo';
@@ -22,21 +22,21 @@ const GameCard: React.FC<IGameCardProps> = (props) => {
 
   const handleCardClick = () => {
     console.log('Card clicked !');
-    socket.emit('card/set_card_visible', {
-      playerID: props.playerID,
-      cardID: props.card.id,
-    });
+    // socket.emit('card/set_card_visible', {
+    //   playerID: props.playerID,
+    //   cardID: props.card.id,
+    // });
   };
 
   useEffect(() => {
-    socket.on('card/card_visible', (payload: ICardVisiblePayload) => {
-      dispatch(
-        setCardVisible({ playerID: payload.playerID, cardID: payload.cardID })
-      );
-    });
-    return () => {
-      socket.removeAllListeners();
-    };
+    // socket.on('card/card_visible', (payload: ICardVisiblePayload) => {
+    //   dispatch(
+    //     setCardVisible({ playerID: payload.playerID, cardID: payload.cardID })
+    //   );
+    // });
+    // return () => {
+    //   socket.removeAllListeners();
+    // };
   }, []);
 
   return (
