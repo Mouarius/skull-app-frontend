@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { socket } from '../../connection/socket';
 import {
   GameState,
@@ -8,13 +8,7 @@ import {
   setGame,
   updatePlayer,
 } from '../../features/game/gameSlice';
-import playerServices from '../../features/player/playerServices';
-import {
-  PlayerObject,
-  selectPlayer,
-  setPlayer,
-} from '../../features/player/playerSlice';
-import { CardObject } from '../../util/types';
+import { PlayerObject, selectPlayer } from '../../features/player/playerSlice';
 import GameCard from './GameCard';
 
 interface IGameBoardParams {
@@ -40,7 +34,7 @@ const GameBoard: React.FC = () => {
     socket.on('fetch_game/response', (game: GameState) => {
       dispatch(setGame(game));
       const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
-      dispatch(setPlayer(playerServices.toPlayerObject(currentPlayer)));
+      // dispatch(setPlayer(playerServices.toPlayerObject(currentPlayer)));
     });
     socket.on('card/card_played', (player: PlayerObject) => {
       dispatch(updatePlayer(player));
@@ -54,8 +48,8 @@ const GameBoard: React.FC = () => {
     <div className="w-full p-8 bg-white border-2 border-solid shadow-md game-board white card border-purple">
       <div className="flex flex-row flex-wrap items-center justify-center">
         {game.players.map((p) => {
-          if (p.deck?.cards) {
-            return p.deck.cards.map((c) => {
+          if (p.deck) {
+            return p.deck.map((c) => {
               if (c.isInGame) {
                 return (
                   <div

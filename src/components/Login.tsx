@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
-import { socket } from '../connection/socket';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
+
+import { socket } from '../connection/socket';
+import { GameState, setGame } from '../features/game/gameSlice';
+import gamesServices from '../features/game/gamesServices';
+import { sendErrorMessage } from '../features/notification/notificationSlice';
+import playerServices from '../features/player/playerServices';
 import {
-  selectPlayer,
-  setPlayer,
-  setUsername,
   resetPlayer,
+  selectPlayer,
+  setPlayerID,
+  setUsername,
 } from '../features/player/playerSlice';
 import Button from './UI/Button/Button';
-import InputText from './UI/Input/InputText';
 import Card from './UI/Card/Card';
-import { GameState } from '../features/game/gameSlice';
+import InputText from './UI/Input/InputText';
 
 const Login: React.FC = () => {
   const history = useHistory();
@@ -23,28 +27,40 @@ const Login: React.FC = () => {
     dispatch(setUsername(e.target.value));
   };
 
-  const handleCreateGameButton = () => {
+  const handleCreateGameButton = async () => {
     if (player.username !== '') {
-      // if user has defined his username
-      // First, create a new game request to the server, to create a room in socket.io
-      // Then get this room id, and make the player to join it
-      socket.emit('login/create_game/request', player);
-      // We must wait for the response to redirect the player to the new game and new room
+      const loggedPlayer = await playerServices.loginPlayer(player.username);
+      dispatch(setPlayerID(loggedPlayer.id));
+      const newGame = await gamesServices.createGame(loggedPlayer.id);
+      dispatch(setGame(newGame));
+      history.push('/game/' + newGame.id);
+    } else {
+      dispatch(sendErrorMessage('You must provide a username.'));
     }
-    //TODO : Display notification to ask the user to give a username
   };
 
   const handleInputGameIDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputGameID(e.target.value);
   };
 
-  const handleJoinGameButton = () => {
+  const handleJoinGameButton = async () => {
     if (inputGameID) {
-      socket.emit('login/join_game/request', {
-        playerObject: player,
-        gameID: inputGameID,
-      });
-      console.log(`Join game requested`);
+      const loggedPlayer = await playerServices.loginPlayer(player.username);
+      console.log(loggedPlayer);
+      dispatch(setPlayerID(loggedPlayer.id));
+      const game = await gamesServices.joinGame(player.id, inputGameID);
+      if (game) {
+        history.push('/game/' + loggedPlayer.id);
+      } else {
+        dispatch(
+          sendErrorMessage(
+            `No games have been found with the id "${inputGameID}"`
+          )
+        );
+        setInputGameID('');
+      }
+    } else {
+      dispatch(sendErrorMessage('You must provide a game id.'));
     }
   };
 

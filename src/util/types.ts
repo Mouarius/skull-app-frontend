@@ -17,12 +17,17 @@ export interface BaseComponentProps {
   className?: string;
 }
 
-export type ITakenColors = (TeamColor | null)[];
+export type TakenColors = TeamColor[];
 
 export enum NotificationType {
   ERROR = 'error',
   SUCCESS = 'success',
   INFO = 'info',
+}
+
+export interface NotificationObject {
+  type: NotificationType;
+  message: string;
 }
 
 export interface CardObject {
@@ -31,4 +36,29 @@ export interface CardObject {
   type: CardType;
   isInGame: boolean;
   isVisible: boolean;
+}
+
+export interface Card {
+  id: string;
+  color: TeamColor;
+  type: CardType;
+  isInGame: boolean;
+  isVisible: boolean;
+}
+
+export interface Player {
+  id: string;
+  username: string;
+  color?: TeamColor;
+  deck?: Card[];
+  isReady: boolean;
+  isPlaying?: boolean;
+  roundsWon?: 0 | 1 | 2;
+  game_id?: string;
+}
+
+export interface Game {
+  id: string;
+  players: Player[];
+  owner_id: string;
 }

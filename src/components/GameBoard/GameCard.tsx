@@ -1,13 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
-import { socket } from '../../connection/socket';
-import { PlayerObject } from '../../features/player/playerSlice';
 import { CardObject, CardType, TeamColor } from '../../util/types';
-import Button from '../UI/Button/Button';
 import GameCardLogo from './GameCardLogo';
 
 interface IGameCardProps {
-  color: TeamColor | null;
+  color: TeamColor | undefined;
   card: CardObject;
   isVisible?: boolean;
   playerID: string;

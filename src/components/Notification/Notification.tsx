@@ -1,5 +1,5 @@
 import React from 'react';
-import { NotificationType } from '../../util/types';
+import { NotificationObject, NotificationType } from '../../util/types';
 
 interface IAlertLogoProps {
   type: NotificationType;
@@ -52,12 +52,7 @@ const AlertLogo: React.FC<IAlertLogoProps> = (props) => {
   );
 };
 
-interface NotificationProps {
-  type: NotificationType;
-  message: string;
-}
-
-const Notification: React.FC<NotificationProps> = (props) => {
+const Notification: React.FC<NotificationObject> = (props) => {
   const colorClass = (type: NotificationType) => {
     switch (type) {
       case 'error':
@@ -72,6 +67,9 @@ const Notification: React.FC<NotificationProps> = (props) => {
         return 'bg-gray-100 text-gray-800';
     }
   };
+  if (!props.message) {
+    return null;
+  }
 
   return (
     <div

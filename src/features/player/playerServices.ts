@@ -1,5 +1,14 @@
+import axios, { AxiosResponse } from 'axios';
 import { isString } from 'lodash';
 import { PlayerObject } from './playerSlice';
+import { Player } from '../../util/types';
+
+const baseUrl = 'http://localhost:3001/api/players';
+
+const loginPlayer = async (username: string): Promise<Player> => {
+  const response = await axios.post(baseUrl, { username: username });
+  return response.data;
+};
 
 //TODO add type validation for each parameter
 
@@ -26,4 +35,4 @@ const toPlayerObject = (object: any): PlayerObject => {
   }
 };
 
-export default { toPlayerObject };
+export default { toPlayerObject, loginPlayer };

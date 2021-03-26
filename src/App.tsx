@@ -1,18 +1,21 @@
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import {
   BrowserRouter as Router,
-  Route,
   Redirect,
+  Route,
   Switch,
 } from 'react-router-dom';
+import GameArea from './components/GameArea';
 import Lobby from './components/Lobby';
 import Login from './components/Login';
-import { useSelector } from 'react-redux';
+import Notification from './components/Notification/Notification';
+import { selectNotification } from './features/notification/notificationSlice';
 import { selectPlayer } from './features/player/playerSlice';
-import GameArea from './components/GameArea';
 
 const App: React.FC = () => {
   const player = useSelector(selectPlayer);
+  const notification = useSelector(selectNotification);
 
   const displayLobby = () => {
     if (!player.username) {
@@ -44,7 +47,7 @@ const App: React.FC = () => {
           }}
         </Route> */}
 
-        {/* <Notification type={NotificationType.INFO} message="An info message" /> */}
+        <Notification {...notification} />
         {/* <div>
           Icons made by{' '}
           <a href="https://www.freepik.com" title="Freepik">

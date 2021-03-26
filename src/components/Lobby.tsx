@@ -1,30 +1,25 @@
-import React, { ReactElement } from 'react';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { socket } from '../connection/socket';
-import PlayersList from './Player/PlayersList';
-import { useDispatch, useSelector } from 'react-redux';
 import {
-  PlayerObject,
-  selectPlayer,
-  setColor,
-  setPlayer,
-  toggleReady,
-} from '../features/player/playerSlice';
-import gameSlice, {
   addPlayer,
   GameState,
   selectGame,
   setGame,
   updatePlayer,
 } from '../features/game/gameSlice';
+import {
+  PlayerObject,
+  selectPlayer,
+  toggleReady,
+} from '../features/player/playerSlice';
+import { TeamColor } from '../util/types';
+import PlayersList from './Player/PlayersList';
 import Button from './UI/Button/Button';
 import ButtonColorList from './UI/Button/ButtonColorList';
-import InputText from './UI/Input/InputText';
 import Card from './UI/Card/Card';
-import { ITakenColors } from '../util/types';
-import playerServices from '../features/player/playerServices';
+import InputText from './UI/Input/InputText';
 
 interface ParamTypes {
   gameID: string;
@@ -36,11 +31,11 @@ const Lobby: React.FC = () => {
   const game = useSelector(selectGame);
   const history = useHistory();
   const params = useParams<ParamTypes>();
-  const [takenColors, setTakenColors] = useState<ITakenColors>([]);
+  const [takenColors, setTakenColors] = useState<TeamColor[]>([]);
   const [startButtonDisabled, setStartButtonDisabled] = useState<boolean>(true);
 
   const copyToClipboard = (): void => {
-    navigator.clipboard.writeText(game.gameID);
+    navigator.clipboard.writeText(game.id);
   };
 
   const handleReadyButton = (): void => {
@@ -51,7 +46,7 @@ const Lobby: React.FC = () => {
 
   const areAllPlayersReady = (): boolean => {
     const allPlayersAreReady = game.players.reduce((playersReady, current) => {
-      if (current.id != game.ownerID) {
+      if (current.id != game.owner_id) {
         return playersReady && current.isReady;
       }
       return playersReady && true;
@@ -75,11 +70,11 @@ const Lobby: React.FC = () => {
 
   const handleStartButton = (): void => {
     console.log('Start clicked');
-    socket.emit('lobby/start_game/request', game.gameID);
+    socket.emit('lobby/start_game/request', game.id);
   };
 
   const startOrReadyButton = (): ReactElement => {
-    if (player.id === game.ownerID) {
+    if (player.id === game.owner_id) {
       return (
         <Button
           className="w-full start-button"
@@ -103,7 +98,13 @@ const Lobby: React.FC = () => {
 
   useEffect(() => {
     if (game.players) {
-      setTakenColors(game.players.map((player) => player.color));
+      const colorsList: TeamColor[] = [];
+      game.players.forEach((p) => {
+        if (p.color) {
+          colorsList.push(p.color);
+        }
+      });
+      setTakenColors(colorsList);
     }
     setStartButtonDisabled(!areAllPlayersReady());
   }, [game]);
@@ -141,7 +142,7 @@ const Lobby: React.FC = () => {
     socket.on('fetch_game/response', (game: GameState) => {
       dispatch(setGame(game));
       const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
-      dispatch(setPlayer(playerServices.toPlayerObject(currentPlayer)));
+      // dispatch(setPlayer(playerServices.toPlayerObject(currentPlayer)));
     });
     socket.on('lobby/player_joined', (player: PlayerObject) => {
       console.log(`A user has logged in : ${player.username}`);
@@ -152,7 +153,7 @@ const Lobby: React.FC = () => {
     });
     socket.on('lobby/change_color/response', (player: PlayerObject) => {
       console.log(`You have changed your color to ${player.color}`);
-      dispatch(setColor(player.color));
+      // dispatch(setColor(player.color));
     });
     socket.on('lobby/player_color_update', (player: PlayerObject) => {
       console.log(
@@ -184,7 +185,7 @@ const Lobby: React.FC = () => {
           label="Code to join this game :"
           readOnly
           onFocus={copyToClipboard}
-          value={game.gameID}
+          value={game.id}
         />
       </div>
       <ButtonColorList takenColors={takenColors} />

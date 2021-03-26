@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
+import { Game } from '../../util/types';
 import { PlayerObject } from '../player/playerSlice';
 
 export interface GameState {
@@ -8,7 +9,7 @@ export interface GameState {
   players: PlayerObject[];
 }
 
-const initialState: GameState = { gameID: '', ownerID: '', players: [] };
+const initialState: Game = { id: '', owner_id: '', players: [] };
 
 const gameSlice = createSlice({
   name: 'game',
@@ -29,7 +30,7 @@ const gameSlice = createSlice({
     setCardVisible: (state, action) => {
       const { playerID, cardID } = action.payload;
       const player = state.players.find((p) => p.id === playerID);
-      const card = player?.deck?.cards?.find((c) => c.id === cardID);
+      const card = player?.deck?.find((c) => c.id === cardID);
       if (card) {
         card.isVisible = true;
       }
@@ -40,7 +41,7 @@ const gameSlice = createSlice({
   },
 });
 
-export const selectGame = (state: RootState): GameState => state.game;
+export const selectGame = (state: RootState): Game => state.game;
 
 export const {
   addPlayer,
