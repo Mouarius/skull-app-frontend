@@ -9,12 +9,16 @@ import {
   setGame,
   updatePlayer,
 } from '../features/game/gameSlice';
+import gamesServices from '../features/game/gamesServices';
+import { sendInfoMessage } from '../features/notification/notificationSlice';
+import playerServices from '../features/player/playerServices';
 import {
   PlayerObject,
   selectPlayer,
+  setPlayer,
   toggleReady,
 } from '../features/player/playerSlice';
-import { TeamColor } from '../util/types';
+import { Game, Player, TeamColor } from '../util/types';
 import PlayersList from './Player/PlayersList';
 import Button from './UI/Button/Button';
 import ButtonColorList from './UI/Button/ButtonColorList';
@@ -22,7 +26,7 @@ import Card from './UI/Card/Card';
 import InputText from './UI/Input/InputText';
 
 interface ParamTypes {
-  gameID: string;
+  game_id: string;
 }
 
 const Lobby: React.FC = () => {
@@ -40,7 +44,7 @@ const Lobby: React.FC = () => {
 
   const handleReadyButton = (): void => {
     console.log(`Ready clicked`);
-    socket.emit('lobby/player_ready', player);
+    socket.emit('PLAYER_READY', player.id);
     dispatch(toggleReady());
   };
 
@@ -92,8 +96,13 @@ const Lobby: React.FC = () => {
     );
   };
 
-  const fetchGame = (gameID: string) => {
-    socket.emit('fetch_game/request', gameID);
+  const fetchGame = async (game_id: string) => {
+    const game = await gamesServices.getGame(game_id);
+    if (game) {
+      dispatch(setGame(game));
+    } else {
+      history.push('/');
+    }
   };
 
   useEffect(() => {
@@ -110,63 +119,50 @@ const Lobby: React.FC = () => {
   }, [game]);
 
   useEffect(() => {
-    //Update the player data in localStorage each time it changes
-    if (player.username) {
-      window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player));
+    // * Fetch game data
+    console.log(`Fetching game data [id: ${params.game_id}] from the server`);
+    fetchGame(params.game_id);
+    const playerData = window.localStorage.getItem('skullAppPlayerData');
+    if (playerData) {
+      const player = playerServices.toPlayerObject(playerData);
+      if (player) {
+        dispatch(setPlayer(player));
+      }
     }
-  }, [player]);
 
-  //* At first render, asks the server if the game trying to be rendered exists
-  //TODO : Try to persist the state through render
-  useEffect(() => {
-    console.log(`Fetching data from the server`);
-    // const fetchGamesList = async () => {
-    //   try {
-    //     console.log(`Requesting the game : ${params.gameID}`);
-    //     const response = await axios.get('/api/games/' + params.gameID);
-    //     dispatch(setGame(response.data));
-    //     const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
-    //     dispatch(setPlayer(playerServices.toPlayerObject(currentPlayer)));
-    //   } catch (e) {
-    //     // If it doesnt exist, redirect the user to home
-    //     console.log(e);
-    //     history.push('/');
-    //   }
-    // };
-    fetchGame(params.gameID);
+    // * Join the lobby
+    socket.emit('JOIN_LOBBY', player.id, params.game_id);
   }, []);
 
   // * Socket listeners
   // TODO Add enum types for listeners
   useEffect(() => {
-    socket.on('fetch_game/response', (game: GameState) => {
-      dispatch(setGame(game));
-      const currentPlayer = window.localStorage.getItem('skullAppPlayerData');
-      // dispatch(setPlayer(playerServices.toPlayerObject(currentPlayer)));
-    });
-    socket.on('lobby/player_joined', (player: PlayerObject) => {
-      console.log(`A user has logged in : ${player.username}`);
+    socket.on('PLAYER_JOINED', (player: Player) => {
+      console.log(`The player ${player.username} has joined the lobby.`);
       dispatch(addPlayer(player));
-    });
-    socket.on('lobby/game_updated', (game: GameState) => {
-      dispatch(setGame(game));
-    });
-    socket.on('lobby/change_color/response', (player: PlayerObject) => {
-      console.log(`You have changed your color to ${player.color}`);
-      // dispatch(setColor(player.color));
-    });
-    socket.on('lobby/player_color_update', (player: PlayerObject) => {
-      console.log(
-        `The player ${player.username} changed his color to ${player.color}`
+      dispatch(
+        sendInfoMessage(`The player ${player.username} has joined the lobby.`)
       );
-      dispatch(updatePlayer(player));
     });
-    socket.on('lobby/player_ready', (player: PlayerObject) => {
-      console.log(
-        `The player ${player.username} is${player.isReady ? '' : ' not'} ready`
+
+    socket.on('PLAYER_LEFT', (player: Player) => {
+      console.log(`The player ${player.username} has left the lobby.`);
+      dispatch(
+        sendInfoMessage(`The player ${player.username} has left the lobby.`)
       );
-      dispatch(updatePlayer(player));
     });
+
+    socket.on('GAME_UPDATE', (game: Game) => {
+      console.log(`Game has been updated to ${game}`);
+      const updatedGame: Game = game;
+      updatedGame.players.forEach((p) => {
+        if (p.id === player.id) {
+          dispatch(setPlayer(p));
+        }
+      });
+      dispatch(setGame(updatedGame));
+    });
+
     socket.on('lobby/start_game/response', (game: GameState) => {
       dispatch(setGame(game));
       console.log('Starting the game');
@@ -174,6 +170,8 @@ const Lobby: React.FC = () => {
     });
 
     return () => {
+      console.log('Leaving the game...');
+      socket.emit('LEAVE_GAME');
       socket.removeAllListeners();
     }; // Cleanup fix
   }, []);

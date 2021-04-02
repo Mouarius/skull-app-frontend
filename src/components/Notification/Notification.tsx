@@ -67,15 +67,12 @@ const Notification: React.FC<NotificationObject> = (props) => {
         return 'bg-gray-100 text-gray-800';
     }
   };
-  if (!props.message) {
-    return null;
-  }
 
   return (
     <div
-      className={`${colorClass(
-        props.type
-      )} bg-opacity-50 flex p-3 rounded-2xl w-96 flex-row items-start fixed bottom-0 mb-2`}
+      className={`${colorClass(props.type)} ${
+        props.message ? 'opacity-100' : 'opacity-0 transform translate-y-10'
+      } transition duration-500 bg-opacity-80 flex p-3 rounded-2xl w-96 flex-row items-start fixed bottom-0 mb-2`}
     >
       <AlertLogo type={props.type} />
       <label className="ml-2">{props.message}</label>

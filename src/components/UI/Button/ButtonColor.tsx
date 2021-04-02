@@ -1,9 +1,10 @@
-import React, { ChangeEvent, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { ChangeEvent } from 'react';
+import { useSelector } from 'react-redux';
 import { socket } from '../../../connection/socket';
 import { selectPlayer } from '../../../features/player/playerSlice';
 import { TeamColor } from '../../../util/types';
 import { IButtonProps } from './Button';
+import './ButtonColor.css';
 
 interface ButtonColorProps extends IButtonProps {
   color: TeamColor;
@@ -14,11 +15,7 @@ const ButtonColor: React.FC<ButtonColorProps> = (props) => {
   const player = useSelector(selectPlayer);
 
   const handleColorChange = (e: ChangeEvent<HTMLInputElement>) => {
-    socket.emit('lobby/change_color/request', {
-      playerObject: player,
-      color: e.target.value,
-    });
-    console.log('🚀 ~ file: ButtonColor.tsx ~ line 14 ~ props', props);
+    socket.emit('CHANGE_COLOR', player.id, e.target.value);
     console.log(`Handle color change to : ${props.color}`);
   };
 

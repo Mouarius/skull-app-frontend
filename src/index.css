@@ -6,7 +6,7 @@
 
 @layer base {
   body {
-    @apply font-sans bg-app-dots;
+    @apply font-sans bg-warmGray-200;
   }
   h1 {
     @apply text-3xl font-display;
@@ -19,18 +19,6 @@
 @layer utilities {
   .animation-delay-1500 {
     animation-delay: 1.5s;
-  }
-}
-
-@layer components {
-  .radio-mark.checked {
-    @apply border-10;
-  }
-  .radio-mark.taken {
-    opacity: 0.2;
-  }
-  .radio-mark.taken:hover {
-    @apply border-none;
   }
 }
 

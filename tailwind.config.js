@@ -34,6 +34,8 @@ module.exports = {
       colors: {
         white: colors.white,
         black: colors.black,
+        trueGray: colors.trueGray,
+        warmGray: colors.warmGray,
         content: {
           100: colors.gray[100],
           200: colors.gray[200],
@@ -77,7 +79,7 @@ module.exports = {
         },
         primary: {
           dark: '#f58a08',
-          DEFAULT: '#f3722c',
+          DEFAULT: colors.purple[500],
         },
       },
     },

@@ -27,14 +27,14 @@ const App: React.FC = () => {
   return (
     <Router>
       <div className="flex flex-col items-center pt-8">
-        <h1 className="mb-4 text-5xl font-bold text-transparent sm:text-6xl bg-gradient-to-r from-red to-yellow bg-clip-text font-display">
+        <h1 className="mb-4 text-5xl font-bold text-transparent sm:text-6xl bg-gradient-to-r from-primary to-blue-600 bg-clip-text font-display">
           Skull App_
         </h1>
         <Switch>
-          <Route path="/game/:gameID/board">
+          <Route path="/game/:game_id/board">
             <GameArea />
           </Route>
-          <Route path="/game/:gameID">
+          <Route path="/game/:game_id">
             <Lobby />
           </Route>
           <Route path="/">

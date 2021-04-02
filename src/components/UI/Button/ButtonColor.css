@@ -1,0 +1,9 @@
+.radio-mark.checked {
+  @apply border-10;
+}
+.radio-mark.taken {
+  opacity: 0.2;
+}
+.radio-mark.taken:hover {
+  @apply border-none;
+}

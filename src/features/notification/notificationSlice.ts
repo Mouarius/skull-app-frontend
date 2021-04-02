@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppDispatch, RootState } from '../../app/store';
 import { NotificationObject, NotificationType } from '../../util/types';
 
-const duration = 5000;
+const duration = 3500;
 let timeout_id: NodeJS.Timeout;
 
 export const sendErrorMessage = (message: string) => (

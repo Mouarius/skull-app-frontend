@@ -48,9 +48,9 @@ const Login: React.FC = () => {
       const loggedPlayer = await playerServices.loginPlayer(player.username);
       console.log(loggedPlayer);
       dispatch(setPlayerID(loggedPlayer.id));
-      const game = await gamesServices.joinGame(player.id, inputGameID);
+      const game = await gamesServices.joinGame(loggedPlayer.id, inputGameID);
       if (game) {
-        history.push('/game/' + loggedPlayer.id);
+        history.push('/game/' + game.id);
       } else {
         dispatch(
           sendErrorMessage(
@@ -63,21 +63,6 @@ const Login: React.FC = () => {
       dispatch(sendErrorMessage('You must provide a game id.'));
     }
   };
-
-  const joinGame = (game: GameState) => {
-    if (game) {
-      window.localStorage.setItem('skullAppPlayerData', JSON.stringify(player));
-      history.push('/game/' + game.gameID);
-    }
-  };
-
-  useEffect(() => {
-    socket.on('login/create_game/response', joinGame);
-    socket.on('login/join_game/response', joinGame);
-    return () => {
-      socket.removeAllListeners();
-    };
-  });
 
   //reset the stored state
   useEffect(() => {

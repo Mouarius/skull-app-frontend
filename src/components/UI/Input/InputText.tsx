@@ -22,7 +22,7 @@ const InputText: React.FC<InputTextProps> = (props) => {
         onChange={props.onChange}
         onFocus={props.onFocus}
         readOnly={props.readOnly}
-        className="w-full p-0.5 pl-2 border-2 outline-none border-gray-200 border-solid transition-all rounded-lg focus:ring-primary focus:ring-opacity-50 focus:ring-2 focus:ring-offset-2"
+        className="w-full p-0.5 pl-2 border-2 bg-white outline-none border-gray-200 border-solid transition-all rounded-lg focus:ring-primary focus:ring-opacity-50 focus:ring-2 focus:ring-offset-2"
       />
     </form>
   );
