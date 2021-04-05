@@ -1,13 +1,13 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { CardObject, CardType, TeamColor } from '../../util/types';
+import { Card, CardType, TeamColor } from '../../util/types';
 import GameCardLogo from './GameCardLogo';
 
 interface IGameCardProps {
   color: TeamColor | undefined;
-  card: CardObject;
+  card: Card;
   isVisible?: boolean;
-  playerID: string;
+  player_id: string;
 }
 
 const GameCard: React.FC<IGameCardProps> = (props) => {

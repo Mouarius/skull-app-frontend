@@ -6,7 +6,7 @@
 
 @layer base {
   body {
-    @apply font-sans bg-warmGray-200;
+    @apply font-sans bg-blue-500;
   }
   h1 {
     @apply text-3xl font-display;

@@ -1,13 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { Game } from '../../util/types';
-import { PlayerObject } from '../player/playerSlice';
-
-export interface GameState {
-  gameID: string;
-  ownerID: string;
-  players: PlayerObject[];
-}
 
 const initialState: Game = { id: '', owner_id: '', players: [] };
 

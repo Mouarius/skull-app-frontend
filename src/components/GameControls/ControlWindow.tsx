@@ -13,17 +13,11 @@ const ControlWindow: React.FC = () => {
 
   const handleFlowerButton = () => {
     console.log('FLOWER CLICKED !');
-    socket.emit('card/play_card', {
-      cardType: CardType.FLOWER,
-      playerID: player.id,
-    });
+    socket.emit('PLAY_CARD', CardType.FLOWER, player.id);
   };
   const handleSkullButton = () => {
     console.log('SKULL CLICKED !');
-    socket.emit('card/play_card', {
-      cardType: CardType.SKULL,
-      playerID: player.id,
-    });
+    socket.emit('PLAY_CARD', CardType.SKULL, player.id);
   };
   const handleBetButton = () => {
     console.log('BET CLICKED !');

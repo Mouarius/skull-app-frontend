@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-
-import { socket } from '../connection/socket';
-import { GameState, setGame } from '../features/game/gameSlice';
+import { setGame } from '../features/game/gameSlice';
 import gamesServices from '../features/game/gamesServices';
 import { sendErrorMessage } from '../features/notification/notificationSlice';
 import playerServices from '../features/player/playerServices';

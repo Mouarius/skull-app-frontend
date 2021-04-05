@@ -2,18 +2,11 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { socket } from '../connection/socket';
-import {
-  addPlayer,
-  GameState,
-  selectGame,
-  setGame,
-  updatePlayer,
-} from '../features/game/gameSlice';
+import { addPlayer, selectGame, setGame } from '../features/game/gameSlice';
 import gamesServices from '../features/game/gamesServices';
 import { sendInfoMessage } from '../features/notification/notificationSlice';
 import playerServices from '../features/player/playerServices';
 import {
-  PlayerObject,
   selectPlayer,
   setPlayer,
   toggleReady,
@@ -74,7 +67,10 @@ const Lobby: React.FC = () => {
 
   const handleStartButton = (): void => {
     console.log('Start clicked');
-    socket.emit('lobby/start_game/request', game.id);
+    console.log(areAllPlayersReady());
+    if (areAllPlayersReady()) {
+      socket.emit('START_GAME', game.id);
+    }
   };
 
   const startOrReadyButton = (): ReactElement => {
@@ -152,26 +148,19 @@ const Lobby: React.FC = () => {
       );
     });
 
-    socket.on('GAME_UPDATE', (game: Game) => {
-      console.log(`Game has been updated to ${game}`);
-      const updatedGame: Game = game;
-      updatedGame.players.forEach((p) => {
-        if (p.id === player.id) {
-          dispatch(setPlayer(p));
-        }
-      });
-      dispatch(setGame(updatedGame));
-    });
-
-    socket.on('lobby/start_game/response', (game: GameState) => {
+    let gameStarting = false;
+    socket.on('GAME_STARTED', (game: Game) => {
       dispatch(setGame(game));
       console.log('Starting the game');
+      gameStarting = true;
       history.push(`${history.location.pathname}/board`);
     });
 
     return () => {
-      console.log('Leaving the game...');
-      socket.emit('LEAVE_GAME');
+      if (!gameStarting) {
+        console.log('Leaving the game...');
+        socket.emit('LEAVE_GAME');
+      }
       socket.removeAllListeners();
     }; // Cleanup fix
   }, []);

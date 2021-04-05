@@ -42,7 +42,7 @@ export interface Card {
   id: string;
   color: TeamColor;
   type: CardType;
-  isInGame: boolean;
+  isPlayed: boolean;
   isVisible: boolean;
 }
 
@@ -61,4 +61,5 @@ export interface Game {
   id: string;
   players: Player[];
   owner_id: string;
+  playedCards?: Card[];
 }

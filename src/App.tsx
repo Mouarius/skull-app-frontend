@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   BrowserRouter as Router,
   Redirect,
@@ -10,12 +10,16 @@ import GameArea from './components/GameArea';
 import Lobby from './components/Lobby';
 import Login from './components/Login';
 import Notification from './components/Notification/Notification';
+import { socket } from './connection/socket';
+import { setGame } from './features/game/gameSlice';
 import { selectNotification } from './features/notification/notificationSlice';
-import { selectPlayer } from './features/player/playerSlice';
+import { selectPlayer, setPlayer } from './features/player/playerSlice';
+import { Game } from './util/types';
 
 const App: React.FC = () => {
   const player = useSelector(selectPlayer);
   const notification = useSelector(selectNotification);
+  const dispatch = useDispatch();
 
   const displayLobby = () => {
     if (!player.username) {
@@ -24,10 +28,28 @@ const App: React.FC = () => {
     return <Lobby />;
   };
 
+  useEffect(() => {
+    socket.on('GAME_UPDATE', (game: Game) => {
+      console.log(`Game has been updated to ${game}`);
+      const updatedGame: Game = game;
+      updatedGame.players.forEach((p) => {
+        if (p.id === player.id) {
+          dispatch(setPlayer(p));
+        }
+      });
+      dispatch(setGame(updatedGame));
+    });
+  });
+
   return (
     <Router>
       <div className="flex flex-col items-center pt-8">
-        <h1 className="mb-4 text-5xl font-bold text-transparent sm:text-6xl bg-gradient-to-r from-primary to-blue-600 bg-clip-text font-display">
+        <h1
+          style={{
+            textShadow: '0px 0px 15px rgba(255,255,255,0.3)',
+          }}
+          className="mb-4 text-5xl font-bold sm:text-6xl text-blue-50 font-display"
+        >
           Skull App_
         </h1>
         <Switch>
